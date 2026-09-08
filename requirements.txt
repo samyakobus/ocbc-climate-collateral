@@ -1,0 +1,9 @@
+# prep/ runtime dependencies.
+#
+# The synthetic floor (S5 gen_portfolio.py, S6 lib/synthetic.py) needs NOTHING
+# beyond the Python 3.10 standard library, by design: it is the unconditional
+# committed floor and must run on a clean machine with no credentials and no
+# wheels to build (plan section 2, three-source rule; AC-13).
+#
+# Live sampling (S7 sample_hazards.py, worker A) adds earthengine-api and
+# rasterio here when it lands.

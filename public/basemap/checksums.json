@@ -1,0 +1,23 @@
+{
+  "asia-region-z0-z10.pmtiles": {
+    "sha256": "ce9521a7d9358d0e1bb6f32782c184a3ec69d09cb828566c1e5a528ed3370490",
+    "bytes": 176749409,
+    "tiles": 15216,
+    "cutFrom": "https://build.protomaps.com/20260901.pmtiles",
+    "cutAt": "2026-09-07"
+  },
+  "asia-cities-z0-z12.pmtiles": {
+    "sha256": "76c1c1fb7bafca7e557b93652ea131437ae8ba5a44f4d4630a4662b64adf39af",
+    "bytes": 35703748,
+    "tiles": 982,
+    "cutFrom": "https://build.protomaps.com/20260901.pmtiles",
+    "cutAt": "2026-09-07"
+  },
+  "asia-z0-z6.pmtiles": {
+    "sha256": "1a33272e582513a3fe8390606beb3e7973c45a6495c9dfc5b990c23162f36272",
+    "bytes": 3439402,
+    "tiles": 96,
+    "cutFrom": "https://build.protomaps.com/20260906.pmtiles",
+    "cutAt": "2026-09-07"
+  }
+}

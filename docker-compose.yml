@@ -1,0 +1,43 @@
+# Demo-day target stack (plan 4.1). Docker is not installed on the Day-1 build host,
+# so local development runs the PGlite + PostGIS server instead (`npm run db:up`).
+# See plan section 10, "Execution deviations". This file is the reference stack and
+# must keep working: the only difference is the container, never the SQL.
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: ocbc_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-ocbc}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-ocbc}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: ocbc_web
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-ocbc}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./public/basemap:/app/public/basemap
+      - ./public/cache:/app/public/cache
+      - ./data:/app/data
+
+volumes:
+  db_data:

@@ -1,0 +1,201 @@
+id,address_line,cluster_name,country,lat,lon,building_type,occupancy_class,appraised_value_sgd,floor_level,elevation_m,dist_to_coast_km,adaptation_project_id
+SG-MS-001,"361 Marina Way, Marina South, Singapore",Marina Bay / Marina South,SG,1.270461,103.867888,residential_highrise_rc,rc_highrise,2010000,8,4.0,0.73,sg-marina-barrage
+SG-MS-002,"8 Marina View, Marina South, Singapore",Marina Bay / Marina South,SG,1.2751,103.8602,residential_highrise_rc,rc_highrise,1800000,12,0.6,0.35,
+SG-MS-003,"10 Marina View, Marina South, Singapore",Marina Bay / Marina South,SG,1.2754,103.8606,residential_highrise_rc,rc_highrise,1800000,21,2.6,0.35,
+SG-MS-004,"302 Marina View, Marina South, Singapore",Marina Bay / Marina South,SG,1.270886,103.866752,residential_highrise_rc,rc_highrise,1880000,26,1.9,0.17,
+SG-MS-005,"253 Marina Way, Marina South, Singapore",Marina Bay / Marina South,SG,1.281901,103.855122,office_tower,rc_highrise,103500000,28,4.5,0.73,sg-marina-barrage
+SG-MS-006,"138 Straits Boulevard, Marina South, Singapore",Marina Bay / Marina South,SG,1.268227,103.855882,residential_highrise_rc,rc_highrise,2850000,31,4.4,0.74,sg-marina-barrage
+SG-MS-007,"5 Marina Way, Marina South, Singapore",Marina Bay / Marina South,SG,1.268489,103.865605,retail_podium,rc_highrise,30200000,3,3.6,0.5,sg-marina-barrage
+SG-MS-008,"267 Marina View, Marina South, Singapore",Marina Bay / Marina South,SG,1.268272,103.854713,residential_highrise_rc,rc_highrise,2310000,9,4.5,0.9,sg-marina-barrage
+SG-MS-009,"277 Marina Way, Marina South, Singapore",Marina Bay / Marina South,SG,1.273686,103.854319,office_tower,rc_highrise,117100000,5,3.1,0.42,sg-marina-barrage
+SG-MS-010,"347 Marina View, Marina South, Singapore",Marina Bay / Marina South,SG,1.277278,103.869932,residential_highrise_rc,rc_highrise,2530000,30,4.4,0.82,
+SG-EC-001,"12 Amber Road, Katong, Singapore",East Coast / Katong / Marine Parade,SG,1.3002,103.8961,residential_highrise_rc,rc_highrise,1000000,8,3.2,0.45,
+SG-EC-002,"88 Marine Parade Road, Katong, Singapore",East Coast / Katong / Marine Parade,SG,1.3019,103.9058,residential_highrise_rc,rc_highrise,1000000,14,3.2,0.45,
+SG-EC-003,"215 East Coast Road, Katong, Singapore",East Coast / Katong / Marine Parade,SG,1.3056,103.9091,residential_landed,lowrise_industrial,1500000,2,4.8,0.7,sg-long-island
+SG-EC-004,"275 East Coast Road, Katong, Singapore",East Coast / Katong / Marine Parade,SG,1.308139,103.914767,residential_highrise_rc,rc_highrise,1470000,5,4.7,0.82,sg-long-island
+SG-EC-005,"218 Meyer Road, Katong, Singapore",East Coast / Katong / Marine Parade,SG,1.300907,103.91328,residential_landed,lowrise_industrial,2300000,2,4.6,0.92,sg-long-island
+SG-EC-006,"206 Tanjong Katong Road, Katong, Singapore",East Coast / Katong / Marine Parade,SG,1.298018,103.914595,residential_highrise_rc,rc_highrise,2110000,3,3.2,0.54,
+SG-EC-007,"143 Meyer Road, Katong, Singapore",East Coast / Katong / Marine Parade,SG,1.291999,103.901278,residential_highrise_rc,rc_highrise,2040000,22,3.7,1.01,
+SG-EC-008,"370 Amber Road, Katong, Singapore",East Coast / Katong / Marine Parade,SG,1.298835,103.90437,residential_landed,lowrise_industrial,1300000,3,2.9,0.57,sg-long-island
+SG-EC-009,"93 Meyer Road, Katong, Singapore",East Coast / Katong / Marine Parade,SG,1.310921,103.897888,residential_highrise_rc,rc_highrise,2470000,4,5.9,1.13,
+SG-EC-010,"280 Amber Road, Katong, Singapore",East Coast / Katong / Marine Parade,SG,1.306579,103.90513,residential_highrise_rc,rc_highrise,2240000,35,3.1,0.64,
+SG-EC-011,"9 East Coast Road, Katong, Singapore",East Coast / Katong / Marine Parade,SG,1.301291,103.912035,shophouse_mixed,lowrise_industrial,19000000,1,5.1,0.87,
+SG-EC-012,"346 Tanjong Katong Road, Katong, Singapore",East Coast / Katong / Marine Parade,SG,1.297745,103.904441,residential_highrise_rc,rc_highrise,1290000,13,2.3,0.63,sg-long-island
+SG-SC-001,"87 Ocean Drive, Sentosa Cove, Singapore",Sentosa Cove,SG,1.242478,103.840885,residential_landed,lowrise_industrial,3320000,1,3.1,0.29,
+SG-SC-002,"324 Treasure Island, Sentosa Cove, Singapore",Sentosa Cove,SG,1.243588,103.836279,residential_landed,lowrise_industrial,3070000,1,4.2,0.25,
+SG-SC-003,"198 Cove Drive, Sentosa Cove, Singapore",Sentosa Cove,SG,1.249121,103.834004,residential_highrise_rc,rc_highrise,2870000,18,5.1,0.32,
+SG-SC-004,"106 Coral Island, Sentosa Cove, Singapore",Sentosa Cove,SG,1.246337,103.834149,residential_landed,lowrise_industrial,2920000,3,5.2,0.4,
+SG-SC-005,"312 Coral Island, Sentosa Cove, Singapore",Sentosa Cove,SG,1.244967,103.842871,residential_landed,lowrise_industrial,3340000,2,5.6,0.35,
+SG-SC-006,"347 Cove Drive, Sentosa Cove, Singapore",Sentosa Cove,SG,1.239924,103.838185,residential_highrise_rc,rc_highrise,2880000,39,2.1,0.23,
+SG-SC-007,"236 Paradise Island, Sentosa Cove, Singapore",Sentosa Cove,SG,1.248097,103.838341,office_tower,rc_highrise,15900000,32,4.7,0.43,
+SG-SC-008,"144 Cove Drive, Sentosa Cove, Singapore",Sentosa Cove,SG,1.239772,103.833587,residential_highrise_rc,rc_highrise,3730000,24,5.7,0.43,
+SG-JI-001,"13 Sakra Crescent, Jurong Island, Singapore",Jurong Island,SG,1.258766,103.704752,industrial_warehouse,lowrise_industrial,42100000,1,7.7,0.74,
+SG-JI-002,"255 Banyan Avenue, Jurong Island, Singapore",Jurong Island,SG,1.27764,103.700411,industrial_warehouse,lowrise_industrial,71200000,2,4.7,0.34,
+SG-JI-003,"44 Sakra Crescent, Jurong Island, Singapore",Jurong Island,SG,1.264553,103.690409,industrial_warehouse,lowrise_industrial,28200000,1,7.2,0.74,
+SG-JI-004,"213 Jurong Island Highway, Jurong Island, Singapore",Jurong Island,SG,1.258746,103.696218,industrial_warehouse,lowrise_industrial,31000000,2,3.3,0.36,
+SG-JI-005,"172 Jurong Island Highway, Jurong Island, Singapore",Jurong Island,SG,1.253383,103.708059,industrial_warehouse,lowrise_industrial,74800000,1,3.3,0.25,
+SG-JI-006,"340 Banyan Avenue, Jurong Island, Singapore",Jurong Island,SG,1.275907,103.688176,industrial_warehouse,lowrise_industrial,57300000,1,5.5,0.43,
+SG-KB-001,"176 Crawford Lane, Kallang Basin, Singapore",Kallang Basin,SG,1.296834,103.878848,residential_highrise_rc,rc_highrise,1140000,25,5.8,1.81,sg-marina-barrage
+SG-KB-002,"278 Crawford Lane, Kallang Basin, Singapore",Kallang Basin,SG,1.31016,103.87838,residential_highrise_rc,rc_highrise,1670000,14,3.9,1.51,
+SG-KB-003,"31 Stadium Boulevard, Kallang Basin, Singapore",Kallang Basin,SG,1.3041,103.8728,residential_highrise_rc,rc_highrise,1200000,11,3.4,1.1,sg-marina-barrage
+SG-KB-004,"250 Kallang Road, Kallang Basin, Singapore",Kallang Basin,SG,1.308869,103.863274,residential_highrise_rc,rc_highrise,1340000,20,6.3,2.12,sg-marina-barrage
+SG-KB-005,"100 Geylang Road, Kallang Basin, Singapore",Kallang Basin,SG,1.305149,103.863088,industrial_warehouse,lowrise_industrial,19200000,2,2.7,0.82,
+SG-KB-006,"35 Kallang Road, Kallang Basin, Singapore",Kallang Basin,SG,1.312624,103.874387,residential_highrise_rc,rc_highrise,1690000,14,4.4,1.25,
+SG-KB-007,"243 Kallang Road, Kallang Basin, Singapore",Kallang Basin,SG,1.299536,103.862997,residential_highrise_rc,rc_highrise,1980000,37,6.9,1.79,sg-marina-barrage
+SG-KB-008,"235 Stadium Boulevard, Kallang Basin, Singapore",Kallang Basin,SG,1.30294,103.877588,shophouse_mixed,lowrise_industrial,13500000,2,6.4,1.83,
+SG-WL-001,"19 Woodlands Drive 62, Woodlands, Singapore",Woodlands,SG,1.429899,103.793721,residential_highrise_rc,rc_highrise,700000,14,17.7,1.95,
+SG-WL-002,"78 Marsiling Rise, Woodlands, Singapore",Woodlands,SG,1.425113,103.795258,residential_highrise_rc,rc_highrise,720000,17,14.3,1.79,
+SG-WL-003,"37 Admiralty Road, Woodlands, Singapore",Woodlands,SG,1.432489,103.783729,residential_highrise_rc,rc_highrise,730000,40,15.3,1.61,
+SG-WL-004,"39 Admiralty Road, Woodlands, Singapore",Woodlands,SG,1.440321,103.792431,residential_highrise_rc,rc_highrise,1100000,23,19.8,2.29,
+SG-WL-005,"44 Marsiling Rise, Woodlands, Singapore",Woodlands,SG,1.442272,103.796121,industrial_warehouse,lowrise_industrial,19100000,1,22.8,2.5,
+SG-WL-006,"266 Marsiling Rise, Woodlands, Singapore",Woodlands,SG,1.437303,103.792278,industrial_warehouse,lowrise_industrial,12500000,1,12.8,1.54,
+SG-BT-001,"1 Bukit Timah Road, Bukit Timah, Singapore",Bukit Timah,SG,1.343997,103.780733,residential_landed,lowrise_industrial,3080000,2,67.7,8.32,
+SG-BT-002,"29 Chancery Lane, Bukit Timah, Singapore",Bukit Timah,SG,1.341123,103.765595,residential_landed,lowrise_industrial,2010000,3,72.7,8.18,
+SG-BT-003,"199 Bukit Timah Road, Bukit Timah, Singapore",Bukit Timah,SG,1.336292,103.77446,residential_landed,lowrise_industrial,3760000,1,83.2,8.26,
+SG-BT-004,"51 Dunearn Road, Bukit Timah, Singapore",Bukit Timah,SG,1.345101,103.776216,residential_landed,lowrise_industrial,2520000,1,35.1,6.16,
+SG-BT-005,"278 Chancery Lane, Bukit Timah, Singapore",Bukit Timah,SG,1.332084,103.766273,residential_landed,lowrise_industrial,3400000,3,69.6,7.94,
+SG-BT-006,"159 Bukit Timah Road, Bukit Timah, Singapore",Bukit Timah,SG,1.341176,103.77355,residential_landed,lowrise_industrial,2180000,2,31.2,5.95,
+SG-BT-007,"267 Namly Avenue, Bukit Timah, Singapore",Bukit Timah,SG,1.339356,103.775868,residential_landed,lowrise_industrial,3360000,3,29.8,5.91,
+SG-BT-008,"216 Sixth Avenue, Bukit Timah, Singapore",Bukit Timah,SG,1.346929,103.777721,residential_highrise_rc,rc_highrise,3150000,11,68.6,8.45,
+SG-BT-009,"12 Holland Road, Bukit Timah, Singapore",Bukit Timah,SG,1.342423,103.765005,residential_landed,lowrise_industrial,2540000,1,65.0,8.06,
+SG-BT-010,"70 Namly Avenue, Bukit Timah, Singapore",Bukit Timah,SG,1.33509,103.767726,residential_highrise_rc,rc_highrise,2680000,37,47.1,7.67,
+MY-SA-001,"34 Persiaran Sultan, Shah Alam, Selangor",Shah Alam / Kuala Langat,MY,3.061077,101.524845,residential_landed,lowrise_industrial,1020000,3,17.6,24.78,
+MY-SA-002,"147 Jalan Batu Tiga, Shah Alam, Selangor",Shah Alam / Kuala Langat,MY,3.088117,101.52393,industrial_warehouse,lowrise_industrial,22500000,1,13.0,24.65,my-smart-tunnel
+MY-SA-003,"19 Persiaran Sultan, Shah Alam, Selangor",Shah Alam / Kuala Langat,MY,3.060684,101.513829,residential_landed,lowrise_industrial,620000,1,12.5,20.93,my-smart-tunnel
+MY-SA-004,"62 Jalan Batu Tiga, Shah Alam, Selangor",Shah Alam / Kuala Langat,MY,3.069266,101.528078,residential_highrise_rc,rc_highrise,870000,5,10.6,21.42,
+MY-SA-005,"104 Persiaran Sultan, Shah Alam, Selangor",Shah Alam / Kuala Langat,MY,3.05259,101.51666,residential_highrise_rc,rc_highrise,1030000,16,27.9,32.87,my-smart-tunnel
+MY-SA-006,"22 Jalan Klang Lama, Shah Alam, Selangor",Shah Alam / Kuala Langat,MY,3.066715,101.489284,industrial_warehouse,lowrise_industrial,20600000,1,17.8,26.22,
+MY-SA-007,"32 Persiaran Kayangan, Shah Alam, Selangor",Shah Alam / Kuala Langat,MY,3.048725,101.526192,industrial_warehouse,lowrise_industrial,10600000,2,13.2,24.92,my-smart-tunnel
+MY-SA-008,"114 Jalan Klang Lama, Shah Alam, Selangor",Shah Alam / Kuala Langat,MY,3.049614,101.516634,industrial_warehouse,lowrise_industrial,15300000,1,7.6,18.39,
+MY-SA-009,"67 Persiaran Sultan, Shah Alam, Selangor",Shah Alam / Kuala Langat,MY,3.101624,101.53455,industrial_warehouse,lowrise_industrial,11200000,1,9.5,21.43,
+MY-SA-010,"60 Jalan Batu Tiga, Shah Alam, Selangor",Shah Alam / Kuala Langat,MY,3.098957,101.530566,residential_highrise_rc,rc_highrise,1030000,16,26.9,29.3,
+MY-KL-001,"31 Jalan Raja Chulan, Kuala Lumpur",Kuala Lumpur city centre,MY,3.156621,101.725882,residential_highrise_rc,rc_highrise,2130000,26,36.8,37.58,
+MY-KL-002,"216 Jalan Raja Chulan, Kuala Lumpur",Kuala Lumpur city centre,MY,3.145349,101.716348,retail_podium,rc_highrise,78000000,2,65.8,42.14,my-smart-tunnel
+MY-KL-003,"41 Jalan Raja Chulan, Kuala Lumpur",Kuala Lumpur city centre,MY,3.156384,101.715763,residential_highrise_rc,rc_highrise,1970000,23,56.6,38.74,
+MY-KL-004,"148 Jalan Bukit Bintang, Kuala Lumpur",Kuala Lumpur city centre,MY,3.162948,101.724362,office_tower,rc_highrise,33000000,3,44.4,36.35,
+MY-KL-005,"42 Jalan Ampang, Kuala Lumpur",Kuala Lumpur city centre,MY,3.155145,101.703349,residential_highrise_rc,rc_highrise,1220000,23,43.8,39.11,my-smart-tunnel
+MY-KL-006,"144 Jalan Bukit Bintang, Kuala Lumpur",Kuala Lumpur city centre,MY,3.14769,101.715047,office_tower,rc_highrise,79700000,8,43.2,35.22,
+MY-KL-007,"87 Jalan Raja Chulan, Kuala Lumpur",Kuala Lumpur city centre,MY,3.161255,101.718069,office_tower,rc_highrise,83700000,14,59.3,38.35,
+MY-KL-008,"279 Jalan Ampang, Kuala Lumpur",Kuala Lumpur city centre,MY,3.158772,101.7159,residential_landed,lowrise_industrial,2180000,1,68.8,41.35,
+MY-GT-001,"335 Persiaran Gurney, George Town, Pulau Pinang",George Town coastal,MY,5.418915,100.338435,residential_landed,lowrise_industrial,1230000,3,9.0,1.25,
+MY-GT-002,"99 Jalan Sultan Ahmad Shah, George Town, Pulau Pinang",George Town coastal,MY,5.42588,100.330773,residential_highrise_rc,rc_highrise,630000,15,3.7,0.57,
+MY-GT-003,"94 Jalan Sultan Ahmad Shah, George Town, Pulau Pinang",George Town coastal,MY,5.404292,100.331899,residential_highrise_rc,rc_highrise,1000000,19,2.3,0.35,
+MY-GT-004,"318 Jalan Sultan Ahmad Shah, George Town, Pulau Pinang",George Town coastal,MY,5.412182,100.329096,residential_highrise_rc,rc_highrise,870000,10,5.1,0.95,
+MY-GT-005,"388 Jalan Macalister, George Town, Pulau Pinang",George Town coastal,MY,5.408461,100.330356,residential_landed,lowrise_industrial,670000,1,2.6,0.48,
+MY-GT-006,"345 Lebuh Light, George Town, Pulau Pinang",George Town coastal,MY,5.418159,100.324865,shophouse_mixed,lowrise_industrial,21300000,2,2.0,0.59,
+MY-GT-007,"131 Lebuh Pantai, George Town, Pulau Pinang",George Town coastal,MY,5.408047,100.325096,residential_highrise_rc,rc_highrise,1110000,34,5.9,0.94,
+MY-DB-001,"257 Jalan Skudai, Johor Bahru, Johor","Danga Bay, Johor Bahru",MY,1.460029,103.697209,residential_highrise_rc,rc_highrise,720000,28,5.4,0.73,
+MY-DB-002,"177 Jalan Tebrau, Johor Bahru, Johor","Danga Bay, Johor Bahru",MY,1.46925,103.70103,residential_highrise_rc,rc_highrise,780000,12,2.9,0.36,
+MY-DB-003,"139 Persiaran Danga, Johor Bahru, Johor","Danga Bay, Johor Bahru",MY,1.479686,103.701552,residential_highrise_rc,rc_highrise,630000,40,2.7,0.56,
+MY-DB-004,"63 Jalan Danga, Johor Bahru, Johor","Danga Bay, Johor Bahru",MY,1.454904,103.720707,residential_landed,lowrise_industrial,810000,1,6.8,0.8,
+MY-DB-005,"27 Jalan Tebrau, Johor Bahru, Johor","Danga Bay, Johor Bahru",MY,1.463741,103.710504,residential_landed,lowrise_industrial,1000000,1,9.3,1.22,
+MY-DB-006,"356 Jalan Abdul Samad, Johor Bahru, Johor","Danga Bay, Johor Bahru",MY,1.476503,103.710058,industrial_warehouse,lowrise_industrial,22800000,2,9.5,1.28,
+MY-DB-007,"193 Jalan Skudai, Johor Bahru, Johor","Danga Bay, Johor Bahru",MY,1.466396,103.694724,residential_highrise_rc,rc_highrise,880000,6,9.2,1.29,
+MY-DB-008,"253 Jalan Abdul Samad, Johor Bahru, Johor","Danga Bay, Johor Bahru",MY,1.48533,103.70881,industrial_warehouse,lowrise_industrial,12300000,1,3.4,0.78,
+MY-KK-001,"8 Jalan Tuaran, Kota Kinabalu, Sabah",Kota Kinabalu,MY,5.986584,116.06695,retail_podium,rc_highrise,17500000,5,10.8,1.42,
+MY-KK-002,"324 Jalan Coastal, Kota Kinabalu, Sabah",Kota Kinabalu,MY,5.982252,116.084265,residential_highrise_rc,rc_highrise,890000,16,9.7,1.23,
+MY-KK-003,"307 Jalan Tuaran, Kota Kinabalu, Sabah",Kota Kinabalu,MY,5.963114,116.069881,residential_landed,lowrise_industrial,630000,3,12.2,1.3,
+MY-KK-004,"306 Jalan Lintas, Kota Kinabalu, Sabah",Kota Kinabalu,MY,5.961084,116.05665,residential_highrise_rc,rc_highrise,720000,6,5.4,0.57,
+MY-KK-005,"238 Jalan Sembulan, Kota Kinabalu, Sabah",Kota Kinabalu,MY,5.985002,116.075908,residential_highrise_rc,rc_highrise,890000,19,8.0,1.21,
+MY-KK-006,"207 Jalan Sembulan, Kota Kinabalu, Sabah",Kota Kinabalu,MY,5.978073,116.058035,residential_highrise_rc,rc_highrise,870000,27,13.7,1.45,
+MY-KK-007,"272 Jalan Tuaran, Kota Kinabalu, Sabah",Kota Kinabalu,MY,5.974136,116.083034,residential_landed,lowrise_industrial,1090000,1,5.6,0.69,
+ID-PL-001,"270 Jalan Pluit Karang Ayu, Penjaringan, Jakarta Utara",Pluit / Muara Baru / Ancol,ID,-6.117332,106.777832,residential_landed,lowrise_industrial,780000,1,2.0,1.88,
+ID-PL-002,"18 Jalan Lodan Raya, Penjaringan, Jakarta Utara",Pluit / Muara Baru / Ancol,ID,-6.121301,106.774377,residential_highrise_rc,rc_highrise,1440000,38,0.3,0.74,
+ID-PL-003,"7 Jalan Muara Baru Raya, Penjaringan, Jakarta Utara",Pluit / Muara Baru / Ancol,ID,-6.122746,106.800068,retail_podium,rc_highrise,21900000,4,-0.3,0.68,id-ncicd-phase-a
+ID-PL-004,"309 Jalan Muara Baru Raya, Penjaringan, Jakarta Utara",Pluit / Muara Baru / Ancol,ID,-6.123395,106.775786,residential_highrise_rc,rc_highrise,1300000,30,0.6,1.02,id-ncicd-phase-a
+ID-PL-005,"139 Jalan Muara Baru Raya, Penjaringan, Jakarta Utara",Pluit / Muara Baru / Ancol,ID,-6.115413,106.794747,residential_highrise_rc,rc_highrise,930000,12,0.7,1.27,
+ID-PL-006,"181 Jalan Pluit Selatan, Penjaringan, Jakarta Utara",Pluit / Muara Baru / Ancol,ID,-6.104512,106.798183,residential_landed,lowrise_industrial,680000,2,1.5,1.64,
+ID-PL-007,"356 Jalan Pluit Karang Ayu, Penjaringan, Jakarta Utara",Pluit / Muara Baru / Ancol,ID,-6.12803,106.782617,retail_podium,rc_highrise,14600000,4,-0.2,0.73,
+ID-PL-008,"231 Jalan Muara Baru Raya, Penjaringan, Jakarta Utara",Pluit / Muara Baru / Ancol,ID,-6.120882,106.783926,residential_landed,lowrise_industrial,730000,3,2.0,1.94,id-ncicd-phase-a
+ID-PL-009,"331 Jalan Muara Baru Raya, Penjaringan, Jakarta Utara",Pluit / Muara Baru / Ancol,ID,-6.114473,106.780542,industrial_warehouse,lowrise_industrial,21100000,1,1.5,1.11,
+ID-PL-010,"361 Jalan Lodan Raya, Penjaringan, Jakarta Utara",Pluit / Muara Baru / Ancol,ID,-6.120271,106.803835,residential_highrise_rc,rc_highrise,800000,15,-0.2,0.39,id-ncicd-phase-a
+ID-PL-011,"61 Jalan Pluit Selatan, Penjaringan, Jakarta Utara",Pluit / Muara Baru / Ancol,ID,-6.10417,106.782428,residential_highrise_rc,rc_highrise,1270000,25,0.3,0.85,
+ID-PL-012,"103 Jalan Muara Baru Raya, Penjaringan, Jakarta Utara",Pluit / Muara Baru / Ancol,ID,-6.119617,106.785447,residential_highrise_rc,rc_highrise,1260000,9,1.9,1.35,
+ID-CJ-001,"169 Jalan Menteng Raya, Menteng, Jakarta Pusat",Central Jakarta,ID,-6.174184,106.822898,residential_landed,lowrise_industrial,1600000,3,4.9,5.82,
+ID-CJ-002,"251 Jalan Cikini Raya, Menteng, Jakarta Pusat",Central Jakarta,ID,-6.180222,106.841955,residential_highrise_rc,rc_highrise,2600000,3,11.6,8.45,id-ncicd-phase-a
+ID-CJ-003,"350 Jalan Cikini Raya, Menteng, Jakarta Pusat",Central Jakarta,ID,-6.180768,106.827465,office_tower,rc_highrise,47900000,1,5.0,5.39,id-ncicd-phase-a
+ID-CJ-004,"324 Jalan Sudirman, Menteng, Jakarta Pusat",Central Jakarta,ID,-6.196863,106.823664,residential_highrise_rc,rc_highrise,1870000,29,5.1,5.59,id-ncicd-phase-a
+ID-CJ-005,"166 Jalan Cikini Raya, Menteng, Jakarta Pusat",Central Jakarta,ID,-6.172995,106.828562,office_tower,rc_highrise,58100000,10,9.1,6.83,id-ncicd-phase-a
+ID-CJ-006,"188 Jalan M.H. Thamrin, Menteng, Jakarta Pusat",Central Jakarta,ID,-6.179826,106.822238,office_tower,rc_highrise,60500000,8,4.8,6.51,
+ID-BS-001,"382 Jalan Edutown, BSD City, Tangerang Selatan","BSD City, Tangerang",ID,-6.292375,106.6656,office_tower,rc_highrise,25500000,20,52.9,28.0,
+ID-BS-002,"291 Jalan Grand Boulevard, BSD City, Tangerang Selatan","BSD City, Tangerang",ID,-6.282117,106.655613,office_tower,rc_highrise,11700000,26,30.9,23.55,
+ID-BS-003,"153 Jalan Grand Boulevard, BSD City, Tangerang Selatan","BSD City, Tangerang",ID,-6.285004,106.675199,residential_highrise_rc,rc_highrise,820000,30,41.4,25.58,
+ID-BS-004,"106 Jalan Raya Serpong, BSD City, Tangerang Selatan","BSD City, Tangerang",ID,-6.285829,106.654604,residential_landed,lowrise_industrial,910000,1,26.3,24.5,
+ID-BS-005,"98 Jalan Raya Serpong, BSD City, Tangerang Selatan","BSD City, Tangerang",ID,-6.301043,106.644102,residential_landed,lowrise_industrial,1310000,2,47.3,27.07,
+ID-BS-006,"242 Jalan Raya Serpong, BSD City, Tangerang Selatan","BSD City, Tangerang",ID,-6.306254,106.669339,residential_landed,lowrise_industrial,740000,2,44.6,25.61,
+ID-BS-007,"321 Jalan Grand Boulevard, BSD City, Tangerang Selatan","BSD City, Tangerang",ID,-6.289022,106.651443,residential_highrise_rc,rc_highrise,1240000,2,33.4,22.98,
+ID-BS-008,"296 Jalan Grand Boulevard, BSD City, Tangerang Selatan","BSD City, Tangerang",ID,-6.309461,106.66082,residential_highrise_rc,rc_highrise,1100000,16,43.1,26.48,
+ID-SM-001,"81 Jalan Kaligawe Raya, Semarang Utara, Jawa Tengah",Semarang north coast,ID,-6.951874,110.407431,residential_landed,lowrise_industrial,760000,1,1.8,1.95,id-banger-polder
+ID-SM-002,"336 Jalan Ronggowarsito, Semarang Utara, Jawa Tengah",Semarang north coast,ID,-6.955901,110.435103,industrial_warehouse,lowrise_industrial,17500000,2,0.3,0.63,id-banger-polder
+ID-SM-003,"205 Jalan Tanah Mas, Semarang Utara, Jawa Tengah",Semarang north coast,ID,-6.951601,110.427008,residential_highrise_rc,rc_highrise,750000,8,0.1,1.24,
+ID-SM-004,"185 Jalan Ronggowarsito, Semarang Utara, Jawa Tengah",Semarang north coast,ID,-6.936102,110.433972,residential_highrise_rc,rc_highrise,770000,33,1.5,1.68,id-banger-polder
+ID-SM-005,"9 Jalan Ronggowarsito, Semarang Utara, Jawa Tengah",Semarang north coast,ID,-6.940235,110.42306,shophouse_mixed,lowrise_industrial,18900000,3,2.4,2.5,id-banger-polder
+ID-SM-006,"201 Jalan Kaligawe Raya, Semarang Utara, Jawa Tengah",Semarang north coast,ID,-6.940205,110.414491,residential_landed,lowrise_industrial,810000,1,0.5,1.13,id-banger-polder
+ID-SM-007,"169 Jalan Tanah Mas, Semarang Utara, Jawa Tengah",Semarang north coast,ID,-6.960766,110.405463,residential_highrise_rc,rc_highrise,840000,14,2.1,2.31,
+ID-SB-001,"124 Jalan Basuki Rahmat, Surabaya, Jawa Timur",Surabaya,ID,-7.233873,112.718448,retail_podium,rc_highrise,19000000,1,4.3,3.88,
+ID-SB-002,"356 Jalan Perak Barat, Surabaya, Jawa Timur",Surabaya,ID,-7.237118,112.724787,residential_landed,lowrise_industrial,1080000,1,1.6,2.91,
+ID-SB-003,"94 Jalan Basuki Rahmat, Surabaya, Jawa Timur",Surabaya,ID,-7.239726,112.751668,residential_highrise_rc,rc_highrise,770000,16,6.2,4.53,
+ID-SB-004,"91 Jalan Kenjeran, Surabaya, Jawa Timur",Surabaya,ID,-7.215132,112.74885,residential_highrise_rc,rc_highrise,940000,2,5.3,5.31,
+ID-SB-005,"134 Jalan Rungkut Industri, Surabaya, Jawa Timur",Surabaya,ID,-7.218986,112.726666,retail_podium,rc_highrise,9200000,5,8.1,6.91,
+ID-SB-006,"113 Jalan Kenjeran, Surabaya, Jawa Timur",Surabaya,ID,-7.22803,112.737772,residential_highrise_rc,rc_highrise,860000,26,8.9,5.57,
+ID-SB-007,"65 Jalan Rungkut Industri, Surabaya, Jawa Timur",Surabaya,ID,-7.212645,112.753049,residential_landed,lowrise_industrial,1100000,2,4.7,5.22,
+CN-PD-001,"255 Pudong South Road, Pudong, Shanghai",Pudong / Lujiazui,CN,31.229034,121.516167,residential_highrise_rc,rc_highrise,3680000,24,3.4,15.74,
+CN-PD-002,"144 Yincheng Middle Road, Pudong, Shanghai",Pudong / Lujiazui,CN,31.238489,121.517768,office_tower,rc_highrise,52900000,6,5.9,19.25,
+CN-PD-003,"191 Century Avenue, Pudong, Shanghai",Pudong / Lujiazui,CN,31.232613,121.520277,residential_landed,lowrise_industrial,3810000,3,6.0,19.39,cn-shanghai-seawall
+CN-PD-004,"28 Yincheng Middle Road, Pudong, Shanghai",Pudong / Lujiazui,CN,31.234484,121.499149,residential_highrise_rc,rc_highrise,3630000,22,6.1,20.93,cn-shanghai-seawall
+CN-PD-005,"351 Lujiazui Ring Road, Pudong, Shanghai",Pudong / Lujiazui,CN,31.223647,121.518263,residential_highrise_rc,rc_highrise,3460000,22,3.6,16.19,cn-shanghai-seawall
+CN-PD-006,"129 Yincheng Middle Road, Pudong, Shanghai",Pudong / Lujiazui,CN,31.243356,121.49035,office_tower,rc_highrise,97200000,13,4.6,17.84,cn-shanghai-seawall
+CN-PD-007,"394 Pudong South Road, Pudong, Shanghai",Pudong / Lujiazui,CN,31.22341,121.519914,office_tower,rc_highrise,106900000,25,3.6,14.54,cn-shanghai-seawall
+CN-PD-008,"240 Dongyuan Road, Pudong, Shanghai",Pudong / Lujiazui,CN,31.231299,121.50925,office_tower,rc_highrise,60900000,6,4.3,15.16,cn-shanghai-seawall
+CN-PD-009,"86 Yincheng Middle Road, Pudong, Shanghai",Pudong / Lujiazui,CN,31.220278,121.507564,retail_podium,rc_highrise,44500000,5,4.2,17.78,
+CN-PD-010,"254 Pudong South Road, Pudong, Shanghai",Pudong / Lujiazui,CN,31.222222,121.502767,residential_highrise_rc,rc_highrise,3550000,23,3.1,15.21,cn-shanghai-seawall
+CN-NS-001,"388 Haibin Road, Nansha, Guangzhou","Nansha, Guangzhou",CN,22.75438,113.55767,residential_highrise_rc,rc_highrise,860000,2,1.5,4.5,
+CN-NS-002,"15 Fengze Road, Nansha, Guangzhou","Nansha, Guangzhou",CN,22.760174,113.552258,office_tower,rc_highrise,17700000,16,2.9,5.51,
+CN-NS-003,"89 Jinmao Avenue, Nansha, Guangzhou","Nansha, Guangzhou",CN,22.760209,113.526105,residential_highrise_rc,rc_highrise,860000,4,3.9,10.01,
+CN-NS-004,"86 Jinmao Avenue, Nansha, Guangzhou","Nansha, Guangzhou",CN,22.765841,113.521957,office_tower,rc_highrise,11300000,32,2.8,4.89,
+CN-NS-005,"61 Nansha Avenue, Nansha, Guangzhou","Nansha, Guangzhou",CN,22.771054,113.536559,residential_landed,lowrise_industrial,1090000,2,2.9,7.13,
+CN-NS-006,"167 Huangge Avenue, Nansha, Guangzhou","Nansha, Guangzhou",CN,22.760811,113.53708,residential_highrise_rc,rc_highrise,850000,29,2.6,5.19,
+CN-NS-007,"110 Haibin Road, Nansha, Guangzhou","Nansha, Guangzhou",CN,22.766149,113.559404,residential_highrise_rc,rc_highrise,1450000,8,4.2,9.73,
+CN-NS-008,"107 Huangge Avenue, Nansha, Guangzhou","Nansha, Guangzhou",CN,22.78354,113.539603,industrial_warehouse,lowrise_industrial,24600000,1,1.5,4.76,
+CN-QH-001,"204 Qianwan First Road, Qianhai, Shenzhen","Qianhai, Shenzhen",CN,22.53071,113.883059,office_tower,rc_highrise,30200000,26,5.4,1.86,
+CN-QH-002,"257 Menghai Avenue, Qianhai, Shenzhen","Qianhai, Shenzhen",CN,22.541767,113.896522,office_tower,rc_highrise,63100000,1,6.1,2.37,
+CN-QH-003,"284 Qianwan First Road, Qianhai, Shenzhen","Qianhai, Shenzhen",CN,22.541259,113.89447,residential_highrise_rc,rc_highrise,2330000,31,7.5,2.5,
+CN-QH-004,"287 Linhai Avenue, Qianhai, Shenzhen","Qianhai, Shenzhen",CN,22.526952,113.885654,residential_highrise_rc,rc_highrise,1550000,4,6.2,1.52,
+CN-QH-005,"197 Baohua Road, Qianhai, Shenzhen","Qianhai, Shenzhen",CN,22.528219,113.898957,residential_highrise_rc,rc_highrise,1890000,40,8.0,2.52,
+CN-QH-006,"323 Menghai Avenue, Qianhai, Shenzhen","Qianhai, Shenzhen",CN,22.526055,113.89431,office_tower,rc_highrise,19000000,10,7.8,2.71,
+CN-QH-007,"243 Linhai Avenue, Qianhai, Shenzhen","Qianhai, Shenzhen",CN,22.532304,113.885857,residential_highrise_rc,rc_highrise,2110000,40,5.6,1.58,
+CN-XM-001,"269 Huandao Road, Siming, Xiamen",Xiamen,CN,24.489762,118.075841,retail_podium,rc_highrise,24800000,3,10.2,1.73,
+CN-XM-002,"371 Huandao Road, Siming, Xiamen",Xiamen,CN,24.4871,118.090812,residential_landed,lowrise_industrial,1160000,2,5.1,0.61,
+CN-XM-003,"219 Hubin South Road, Siming, Xiamen",Xiamen,CN,24.478305,118.096203,residential_highrise_rc,rc_highrise,1180000,20,16.3,2.16,
+CN-XM-004,"183 Huandao Road, Siming, Xiamen",Xiamen,CN,24.482322,118.101079,residential_highrise_rc,rc_highrise,1680000,38,11.5,1.49,
+CN-XM-005,"305 Jiahe Road, Siming, Xiamen",Xiamen,CN,24.488385,118.101931,residential_highrise_rc,rc_highrise,1500000,9,6.1,1.28,
+CN-NB-001,"232 Zhongshan East Road, Yinzhou, Ningbo",Ningbo,CN,29.85913,121.539614,residential_landed,lowrise_industrial,1620000,1,7.9,18.92,
+CN-NB-002,"282 Sanjiangkou Road, Yinzhou, Ningbo",Ningbo,CN,29.860923,121.542634,residential_highrise_rc,rc_highrise,1290000,20,2.3,7.39,
+CN-NB-003,"368 Sanjiangkou Road, Yinzhou, Ningbo",Ningbo,CN,29.877795,121.536791,residential_highrise_rc,rc_highrise,980000,15,7.6,17.84,
+CN-NB-004,"169 Baizhang Road, Yinzhou, Ningbo",Ningbo,CN,29.875667,121.546975,residential_highrise_rc,rc_highrise,1310000,33,2.2,8.67,
+CN-NB-005,"161 Heyi Avenue, Yinzhou, Ningbo",Ningbo,CN,29.862486,121.545903,retail_podium,rc_highrise,17200000,4,2.9,12.04,
+HK-TK-001,"57 Pui Shing Road, Tseung Kwan O, New Territories",Tseung Kwan O,HK,22.32219,114.26604,residential_highrise_rc,rc_highrise,1310000,7,3.8,0.56,hk-drainage-tunnels
+HK-TK-002,"352 Pui Shing Road, Tseung Kwan O, New Territories",Tseung Kwan O,HK,22.309308,114.262195,residential_highrise_rc,rc_highrise,2490000,4,11.6,1.52,
+HK-TK-003,"96 Tong Chun Street, Tseung Kwan O, New Territories",Tseung Kwan O,HK,22.311441,114.26124,residential_highrise_rc,rc_highrise,1860000,18,6.3,1.0,hk-drainage-tunnels
+HK-TK-004,"111 Po Yap Road, Tseung Kwan O, New Territories",Tseung Kwan O,HK,22.322076,114.258575,industrial_warehouse,lowrise_industrial,21000000,1,8.0,1.32,hk-drainage-tunnels
+HK-TK-005,"54 Pui Shing Road, Tseung Kwan O, New Territories",Tseung Kwan O,HK,22.315601,114.250368,industrial_warehouse,lowrise_industrial,23900000,1,11.4,1.9,
+HK-TK-006,"125 Wan Po Road, Tseung Kwan O, New Territories",Tseung Kwan O,HK,22.308646,114.269174,residential_highrise_rc,rc_highrise,2590000,22,5.9,0.75,
+HK-HF-001,"84 Heng Fa Chuen Road, Chai Wan, Hong Kong Island",Heng Fa Chuen / Chai Wan,HK,22.275269,114.244112,industrial_warehouse,lowrise_industrial,17000000,2,6.1,0.98,
+HK-HF-002,"234 Sheung On Street, Chai Wan, Hong Kong Island",Heng Fa Chuen / Chai Wan,HK,22.280416,114.239884,residential_highrise_rc,rc_highrise,1730000,6,3.9,0.54,
+HK-HF-003,"279 Wan Tsui Road, Chai Wan, Hong Kong Island",Heng Fa Chuen / Chai Wan,HK,22.279962,114.240079,residential_highrise_rc,rc_highrise,1590000,26,4.3,0.68,hk-drainage-tunnels
+HK-HF-004,"214 Heng Fa Chuen Road, Chai Wan, Hong Kong Island",Heng Fa Chuen / Chai Wan,HK,22.277597,114.237895,residential_highrise_rc,rc_highrise,2180000,27,4.3,0.77,hk-drainage-tunnels
+HK-HF-005,"307 Hong Man Street, Chai Wan, Hong Kong Island",Heng Fa Chuen / Chai Wan,HK,22.282757,114.231212,residential_highrise_rc,rc_highrise,1520000,15,4.6,0.47,
+HK-KT-001,"79 Sheung Yuet Road, Kai Tak, Kowloon",Kai Tak,HK,22.330961,114.206597,residential_highrise_rc,rc_highrise,2270000,32,7.9,1.18,
+HK-KT-002,"289 Muk On Street, Kai Tak, Kowloon",Kai Tak,HK,22.33,114.202325,residential_highrise_rc,rc_highrise,2360000,24,6.6,0.92,hk-drainage-tunnels
+HK-KT-003,"82 Concorde Road, Kai Tak, Kowloon",Kai Tak,HK,22.337259,114.199002,office_tower,rc_highrise,26900000,2,7.6,1.09,hk-drainage-tunnels
+HK-KT-004,"309 Olympic Avenue, Kai Tak, Kowloon",Kai Tak,HK,22.333902,114.199575,office_tower,rc_highrise,57100000,20,3.9,0.73,
+HK-KT-005,"376 Muk On Street, Kai Tak, Kowloon",Kai Tak,HK,22.334964,114.206399,residential_highrise_rc,rc_highrise,3010000,20,5.6,0.72,
+HK-TP-001,"238 Tai Po Tai Wo Road, Tai Po, New Territories",Tai Po / Sha Tin,HK,22.454638,114.157896,retail_podium,rc_highrise,23100000,1,33.2,2.42,hk-drainage-tunnels
+HK-TP-002,"13 Sha Tin Rural Committee Road, Tai Po, New Territories",Tai Po / Sha Tin,HK,22.464562,114.174354,residential_landed,lowrise_industrial,2740000,3,41.1,3.58,
+HK-TP-003,"91 Sha Tin Rural Committee Road, Tai Po, New Territories",Tai Po / Sha Tin,HK,22.458954,114.166466,residential_landed,lowrise_industrial,2810000,2,36.6,2.79,hk-drainage-tunnels
+HK-TP-004,"250 Ting Kok Road, Tai Po, New Territories",Tai Po / Sha Tin,HK,22.439336,114.167958,residential_highrise_rc,rc_highrise,2370000,23,12.3,1.65,hk-drainage-tunnels
+HK-TP-005,"301 Sha Tin Rural Committee Road, Tai Po, New Territories",Tai Po / Sha Tin,HK,22.42645,114.183812,residential_landed,lowrise_industrial,1780000,2,37.9,2.84,
+HK-TC-001,"306 Ying Tung Road, Tung Chung, Lantau",Tung Chung,HK,22.284808,113.94639,retail_podium,rc_highrise,14300000,4,6.0,0.69,
+HK-TC-002,"316 Ying Tung Road, Tung Chung, Lantau",Tung Chung,HK,22.290416,113.950699,residential_highrise_rc,rc_highrise,1450000,23,13.8,1.07,hk-drainage-tunnels
+HK-TC-003,"178 Chung Yan Road, Tung Chung, Lantau",Tung Chung,HK,22.297543,113.951672,residential_highrise_rc,rc_highrise,1930000,23,9.9,0.84,
+HK-TC-004,"396 Tat Tung Road, Tung Chung, Lantau",Tung Chung,HK,22.287374,113.951564,residential_highrise_rc,rc_highrise,1550000,27,8.7,1.07,hk-drainage-tunnels

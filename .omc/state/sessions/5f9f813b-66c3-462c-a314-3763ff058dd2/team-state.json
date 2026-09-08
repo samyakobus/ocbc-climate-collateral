@@ -1,0 +1,23 @@
+{
+  "active": true,
+  "current_phase": "team-exec",
+  "team_name": "ocbc-mvp",
+  "agent_count": "3",
+  "agent_types": "executor",
+  "fix_loop_count": "0",
+  "max_fix_loops": "3",
+  "linked_ralph": "false",
+  "paused": "false",
+  "resumed_at": "2026-09-08",
+  "stage_history": "team-plan:2026-09-07T19:55:00+07:00(skipped),team-exec:2026-09-07T19:56:00+07:00,day2-start:2026-09-07T20:40:00+07:00,paused:2026-09-07T20:50:00+07:00,resumed:2026-09-08",
+  "task_list_path": ".omc/state/team/ocbc-mvp/tasks.md",
+  "rulings_on_resume": "P1 accept 2030 tile ~3 and amend plan S17; P2 amend ADR-5 (2025 revaluation unreachable), no 2025 fixture; worker-c gets #18 map shell early",
+  "db_path": "PGlite 0.5.8 + PostGIS 3.6 over pg wire (npm run db:up, worker-a exclusive); compose remains demo target",
+  "env_notes": "no docker, no psql, no tmux, no ANTHROPIC_API_KEY; node 24, npm 11, python 3.10.7, git 2.37",
+  "_meta": {
+    "mode": "team",
+    "sessionId": "5f9f813b-66c3-462c-a314-3763ff058dd2",
+    "updatedAt": "2026-09-08T04:01:14.040Z",
+    "updatedBy": "state_write_tool"
+  }
+}

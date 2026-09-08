@@ -1,0 +1,7 @@
+## Handoff: team-plan -> team-exec
+
+- **Decided**: The consensus plan `.omc/plans/ocbc-climate-collateral-mvp.md` (Architect SOUND, Critic APPROVED, iteration 5) IS the task graph; team-plan and team-prd stages are skipped. Three workers map to the plan's owners: worker-a = A (platform and data), worker-b = B (engine and case flow), worker-c = C (map, dashboards, AI Dashboard, portfolio generator). Day 1 first, then Days 2-5 in order. Task list lives at `.omc/state/team/ocbc-mvp/tasks.md`.
+- **Rejected**: Re-planning with planner/analyst (redundant after 5 consensus iterations). Worktree isolation (repo was not a git repo; owner split already partitions files).
+- **Risks**: Docker is NOT installed, so the compose PostGIS stack cannot run on this machine yet; worker-a must establish a DB path (Docker Desktop install by the user, or an embedded/WASM Postgres with PostGIS for tests) and record the choice in the plan changelog. No ANTHROPIC_API_KEY (needed only from Day 4; fallbacks are the tested default). No tmux (irrelevant for Claude teammates). Python is 3.10.7 (prep scripts must stay 3.10-compatible). Windows host: paths, line endings, shell differences.
+- **Files**: `.omc/plans/ocbc-climate-collateral-mvp.md` (sections 3-8), `.omc/specs/deep-interview-ocbc-climate-collateral.md`, `.omc/research/*.md`.
+- **Remaining**: All of S1-S31. Day 1 = S1-S9 with dependencies S3,S4,S8 after S1; S7 after S4; S9 after S1.

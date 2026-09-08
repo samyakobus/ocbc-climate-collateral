@@ -1,0 +1,59 @@
+id,title,event_type,occurred_on,lon,lat,source_feed,source_url,dedupe_key
+EONET_24010,Wildfire in Indonesia 1031724,fire,2026-09-03,111.05683,-3.0036,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031724,eonet:EONET_24010
+EONET_22926,Typhoon Saudel,storm,2026-09-03,117.4,23.8,NASA EONET,https://www.metoc.navy.mil/jtwc/products/wp1726.tcw,eonet:EONET_22926
+EONET_24020,Wildfire in Indonesia 1031701,fire,2026-08-31,105.27133,-2.93094,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031701,eonet:EONET_24020
+EONET_23974,Wildfire in Indonesia 1031674,fire,2026-08-28,113.77609,-3.22177,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031674,eonet:EONET_23974
+EONET_23764,Wildfire in Indonesia 1031458,fire,2026-08-27,117.94516,2.42541,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031458,eonet:EONET_23764
+EV-CURATED-BSD-POLLUTION,"Cisadane river pollution incident near BSD City, Tangerang",pollution,2026-08-27,106.6512,-6.3009,curated,https://www.gdacs.org/,EV-CURATED-BSD-POLLUTION
+EONET_24043,Wildfire in Indonesia 1031689,fire,2026-08-26,109.60315,-0.15934,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031689,eonet:EONET_24043
+EONET_23634,Wildfire in Indonesia 1031350,fire,2026-08-25,110.03149,-1.13747,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031350,eonet:EONET_23634
+EONET_23833,Wildfire in Indonesia 1031521,fire,2026-08-25,112.90724,-8.04654,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031521,eonet:EONET_23833
+EONET_23909,Wildfire in Indonesia 1031554,fire,2026-08-25,111.08972,-2.7391,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031554,eonet:EONET_23909
+EONET_23207,Tropical Storm Narra,storm,2026-08-25,109.6,20.0,NASA EONET,https://www.metoc.navy.mil/jtwc/products/wp1826.tcw,eonet:EONET_23207
+EONET_23541,Wildfire in Indonesia 1031304,fire,2026-08-24,111.22659,-2.90126,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031304,eonet:EONET_23541
+EONET_23594,Wildfire in Indonesia 1031320,fire,2026-08-24,114.6838,-2.72464,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031320,eonet:EONET_23594
+EONET_24046,Wildfire in Indonesia 1031720,fire,2026-08-23,114.05635,-3.10306,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031720,eonet:EONET_24046
+EONET_24047,Wildfire in Indonesia 1031727,fire,2026-08-23,109.05481,0.4596,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031727,eonet:EONET_24047
+EONET_23725,Wildfire in Indonesia 1031427,fire,2026-08-22,104.30667,-1.74175,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031427,eonet:EONET_23725
+EONET_23793,Wildfire in Indonesia 1031471,fire,2026-08-22,116.05965,-0.40939,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031471,eonet:EONET_23793
+EONET_23794,Wildfire in Indonesia 1031476,fire,2026-08-22,109.6645,0.01794,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031476,eonet:EONET_23794
+EONET_23918,Wildfire in Indonesia 1031593,fire,2026-08-22,104.32912,-2.44697,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031593,eonet:EONET_23918
+EONET_23919,Wildfire in Indonesia 1031594,fire,2026-08-22,109.64295,-0.90545,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031594,eonet:EONET_23919
+EONET_24048,Wildfire in Indonesia 1031690,fire,2026-08-22,114.50498,-3.053,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031690,eonet:EONET_24048
+EONET_24049,Wildfire in Indonesia 1031729,fire,2026-08-22,105.29917,-3.1155,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031729,eonet:EONET_24049
+EONET_24050,Wildfire in Indonesia 1031721,fire,2026-08-21,103.4787,-2.2785,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031721,eonet:EONET_24050
+EONET_23650,Wildfire in Indonesia 1031374,fire,2026-08-20,114.94929,-2.71049,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031374,eonet:EONET_23650
+EONET_24004,Wildfire in Indonesia 1031664,fire,2026-08-20,109.52282,-0.81118,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031664,eonet:EONET_24004
+EONET_23359,Wildfire in Indonesia 1031147,fire,2026-08-19,105.71195,-3.59419,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031147,eonet:EONET_23359
+EONET_23604,Wildfire in Indonesia 1031348,fire,2026-08-18,109.89745,-1.0383,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031348,eonet:EONET_23604
+EV-CURATED-BORNEO-FIRE,"Peatland forest fire, Central Kalimantan, Borneo",fire,2026-08-18,113.9214,-2.2088,curated,https://firms.modaps.eosdis.nasa.gov/,EV-CURATED-BORNEO-FIRE
+EONET_23315,Wildfire in Indonesia 1031106,fire,2026-08-17,112.05437,-0.29972,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031106,eonet:EONET_23315
+EONET_23799,Wildfire in Indonesia 1031474,fire,2026-08-17,110.10021,-0.61214,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031474,eonet:EONET_23799
+EONET_23578,Wildfire in Indonesia 1031308,fire,2026-08-14,112.92257,-2.57712,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031308,eonet:EONET_23578
+EONET_22969,Wildfire in Indonesia 1030809,fire,2026-08-13,115.10384,-2.85016,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1030809,eonet:EONET_22969
+EONET_23112,Wildfire in Indonesia 1030876,fire,2026-08-13,110.40624,-1.99902,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1030876,eonet:EONET_23112
+EONET_23279,Wildfire in Indonesia 1031052,fire,2026-08-13,110.95414,-3.00728,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031052,eonet:EONET_23279
+EONET_23526,Wildfire in Indonesia 1031254,fire,2026-08-13,112.85554,-2.68432,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031254,eonet:EONET_23526
+EONET_23527,Wildfire in Indonesia 1031217,fire,2026-08-13,110.18817,-1.82402,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1031217,eonet:EONET_23527
+EONET_23114,Wildfire in Indonesia 1030913,fire,2026-08-12,114.00077,-3.20227,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1030913,eonet:EONET_23114
+EONET_23118,Wildfire in Indonesia 1030879,fire,2026-08-09,110.48535,-2.21399,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1030879,eonet:EONET_23118
+EONET_23119,"Wildfire in Indonesia, Timor-Leste 1030914",fire,2026-08-09,124.10949,-9.44674,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1030914,eonet:EONET_23119
+EONET_21776,Super Typhoon Dolphin,storm,2026-08-09,120.6,27.9,NASA EONET,https://www.metoc.navy.mil/jtwc/products/wp1226.tcw,eonet:EONET_21776
+EONET_23009,Wildfire in Indonesia 1030791,fire,2026-08-07,110.32664,-2.30958,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1030791,eonet:EONET_23009
+EONET_22844,Wildfire in Indonesia 1030660,fire,2026-08-06,110.5392,-1.99814,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1030660,eonet:EONET_22844
+EONET_22399,Wildfire in Indonesia 1030312,fire,2026-08-05,109.72018,0.71384,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1030312,eonet:EONET_22399
+EV-CURATED-NTT-EARTHQUAKE,"Earthquake off Flores, East Nusa Tenggara",earthquake,2026-08-05,122.9765,-8.5211,curated,https://earthquake.usgs.gov/earthquakes/map/,EV-CURATED-NTT-EARTHQUAKE
+EONET_22601,Wildfire in Indonesia 1030460,fire,2026-08-02,112.88635,-2.9818,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1030460,eonet:EONET_22601
+EONET_22417,Wildfire in Indonesia 1030313,fire,2026-08-01,110.45077,0.07468,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1030313,eonet:EONET_22417
+EONET_22734,Wildfire in Indonesia 1030532,fire,2026-08-01,110.20362,-2.008,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1030532,eonet:EONET_22734
+EONET_22554,Wildfire in Indonesia 1030418,fire,2026-07-31,110.57658,0.53245,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1030418,eonet:EONET_22554
+EONET_22421,Wildfire in Indonesia 1030303,fire,2026-07-30,109.7123,-1.09956,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=WF&eventid=1030303,eonet:EONET_22421
+EONET_21600,Typhoon Noul,storm,2026-07-25,115.1,22.4,NASA EONET,https://www.metoc.navy.mil/jtwc/products/wp1126.tcw,eonet:EONET_21600
+EONET_20877,Super Typhoon Bavi,storm,2026-07-11,120.4,28.7,NASA EONET,https://www.metoc.navy.mil/jtwc/products/wp0926.tcw,eonet:EONET_20877
+EONET_20980,Tropical Storm Maysak,storm,2026-07-04,107.9,21.6,NASA EONET,https://www.metoc.navy.mil/jtwc/products/wp1026.tcw,eonet:EONET_20980
+EONET_20880,Flood in Thailand 1103996,flood,2026-06-30,98.91858,8.06173,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=FL&eventid=1103996,eonet:EONET_20880
+EONET_20882,Flood in Vietnam 1103992,flood,2026-06-24,106.10609,22.74269,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=FL&eventid=1103992,eonet:EONET_20882
+EONET_20736,Flood in Myanmar 1103975,flood,2026-06-23,96.02635,19.91049,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=FL&eventid=1103975,eonet:EONET_20736
+EONET_20585,Flood in Indonesia 1103950,flood,2026-06-14,95.9715,4.41888,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=FL&eventid=1103950,eonet:EONET_20585
+EONET_20499,Flood in Philippines 1103942,flood,2026-06-12,124.85007,5.88836,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=FL&eventid=1103942,eonet:EONET_20499
+EONET_20465,Flood in Malaysia 1103939,flood,2026-06-10,113.04728,3.18743,NASA EONET,https://www.gdacs.org/report.aspx?eventtype=FL&eventid=1103939,eonet:EONET_20465

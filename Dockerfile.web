@@ -1,0 +1,37 @@
+# Plan 4.1: node:22-alpine, pinned go-pmtiles v1.22, Playwright deps.
+FROM node:22-bookworm-slim
+
+ENV PMTILES_VERSION=1.22.0
+# SHA-256 of go-pmtiles_1.22.0_Linux_x86_64.tar.gz, recorded on 2026-09-07. The project
+# publishes no checksums.txt, so this was computed from the downloaded asset and pinned.
+# scripts/fetch-basemap.ts pins the same value for the local binary.
+ENV PMTILES_SHA256=a3a206d8fc7c2692f21747ec7d3cef2d34e6977fb3ca0209ae7d8d40c5c99161
+ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ca-certificates curl git python3 python3-pip python3-venv \
+    && rm -rf /var/lib/apt/lists/*
+
+# Pinned go-pmtiles v1.22 (plan 4.7). `pmtiles extract` produces both basemap archives.
+RUN curl -fsSL -o /tmp/pmtiles.tar.gz \
+      "https://github.com/protomaps/go-pmtiles/releases/download/v${PMTILES_VERSION}/go-pmtiles_${PMTILES_VERSION}_Linux_x86_64.tar.gz" \
+    && echo "${PMTILES_SHA256}  /tmp/pmtiles.tar.gz" | sha256sum -c - \
+    && tar -xzf /tmp/pmtiles.tar.gz -C /usr/local/bin pmtiles \
+    && rm /tmp/pmtiles.tar.gz \
+    && chmod +x /usr/local/bin/pmtiles \
+    && pmtiles version
+
+WORKDIR /app
+
+COPY package.json package-lock.json* ./
+RUN npm ci || npm install
+
+# Playwright browser + OS deps. Roughly 400 MB; on the Day-1 network dependency list (plan S1).
+RUN npx --yes playwright install --with-deps chromium
+
+COPY . .
+
+RUN npm run build
+
+EXPOSE 3000
+CMD ["npm", "run", "start"]
