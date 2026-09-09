@@ -82,10 +82,10 @@ export default async function CasesPage({
                 data-testid={`cases-scenario-${option.key}`}
                 aria-current={selected ? 'page' : undefined}
                 className={
-                  'rounded border px-2 py-1 ' +
+                  'rounded border px-2 py-1 transition-colors ' +
                   (selected
-                    ? 'border-black/30 font-semibold dark:border-white/40'
-                    : 'border-transparent opacity-60 hover:opacity-100')
+                    ? 'border-accent font-semibold text-accent'
+                    : 'border-transparent text-muted hover:text-accent')
                 }
               >
                 {option.label}
@@ -95,18 +95,18 @@ export default async function CasesPage({
         </nav>
       </header>
 
-      <div className="overflow-x-auto rounded-lg border border-black/10 dark:border-white/15">
-        <table className="w-full min-w-[52rem] text-sm">
+      <div className="panel overflow-x-auto">
+        <table className="data-table min-w-[52rem]">
           <thead>
-            <tr className="text-left text-xs opacity-60">
-              <th scope="col" className="px-4 py-2 font-medium">Collateral</th>
-              <th scope="col" className="px-4 py-2 font-medium">Applicant</th>
-              <th scope="col" className="px-4 py-2 font-medium">Segment</th>
-              <th scope="col" className="px-4 py-2 text-right font-medium">Appraised</th>
-              <th scope="col" className="px-4 py-2 text-right font-medium">Haircut</th>
-              <th scope="col" className="px-4 py-2 text-right font-medium">Adjusted</th>
-              <th scope="col" className="px-4 py-2 text-right font-medium">Max loan</th>
-              <th scope="col" className="px-4 py-2 font-medium">Band</th>
+            <tr>
+              <th scope="col">Collateral</th>
+              <th scope="col">Applicant</th>
+              <th scope="col">Segment</th>
+              <th scope="col" className="num">Appraised</th>
+              <th scope="col" className="num">Haircut</th>
+              <th scope="col" className="num">Adjusted</th>
+              <th scope="col" className="num">Max loan</th>
+              <th scope="col">Band</th>
             </tr>
           </thead>
           <tbody>
@@ -114,41 +114,38 @@ export default async function CasesPage({
               <tr
                 key={item.loan_application_id}
                 data-testid={`case-row-${item.collateral_id}`}
-                className="border-t border-black/5 hover:bg-black/[0.02] dark:border-white/10 dark:hover:bg-white/[0.04]"
               >
-                <td className="px-4 py-2">
+                <td>
                   <Link
                     href={`/cases/${item.collateral_id}?scenario=${scenario}`}
-                    className="font-medium underline-offset-2 hover:underline"
+                    className="font-medium underline-offset-2 hover:text-accent hover:underline"
                   >
                     {item.collateral_id}
                   </Link>
-                  <div className="text-xs opacity-60">{item.address_line}</div>
+                  <div className="text-[11px] text-faint">{item.address_line}</div>
                 </td>
-                <td className="px-4 py-2">{item.applicant_name}</td>
-                <td className="px-4 py-2 text-xs">{item.segment}</td>
-                <td className="px-4 py-2 text-right tabular-nums">
-                  {money(item.appraised_value_sgd)}
-                </td>
-                <td className="px-4 py-2 text-right tabular-nums">
+                <td>{item.applicant_name}</td>
+                <td className="text-[11px] text-muted">{item.segment}</td>
+                <td className="num">{money(item.appraised_value_sgd)}</td>
+                <td className="num">
                   {item.total_haircut === null ? '-' : percent(item.total_haircut)}
                 </td>
-                <td className="px-4 py-2 text-right tabular-nums">
+                <td className="num">
                   {item.adjusted_value_sgd === null ? '-' : money(item.adjusted_value_sgd)}
                 </td>
-                <td className="px-4 py-2 text-right tabular-nums">
+                <td className="num">
                   {item.max_loan_sgd === null ? '-' : money(item.max_loan_sgd)}
                 </td>
-                <td className="px-4 py-2">
+                <td>
                   {item.band ? (
-                    <span className={`rounded px-2 py-0.5 text-xs ${BAND_CHIP[item.band]}`}>
+                    <span className={`rounded px-1.5 py-0.5 text-[11px] ${BAND_CHIP[item.band]}`}>
                       {item.band}
                     </span>
                   ) : (
-                    <span className="text-xs opacity-60">unscored</span>
+                    <span className="text-[11px] text-faint">unscored</span>
                   )}
                   {item.refer_to_risk ? (
-                    <span className="ml-1.5 text-xs text-red-700 dark:text-red-400">refer</span>
+                    <span className="ml-1.5 text-[11px] font-semibold text-accent">refer</span>
                   ) : null}
                 </td>
               </tr>

@@ -183,10 +183,22 @@ export function PortfolioMap({ pins, basemap }: Props) {
     });
 
     // A handle for the AC-5 end-to-end spec, which has to read pin colours out
-    // of the rendered style rather than guess at pixels. Never in production.
-    if (process.env.NODE_ENV !== 'production') {
-      (window as unknown as { __portfolioMap?: MapLibreMap }).__portfolioMap = map;
-    }
+    // of the rendered style rather than guess at pixels.
+    //
+    // Unconditional, and it has to be. This was guarded by
+    // `process.env.NODE_ENV !== 'production'`, which Next inlines to `false` in
+    // the client bundle, so the whole assignment was eliminated from the build.
+    // The end-to-end run serves the BUILD, and every map spec waits on this
+    // handle, so all of them failed with "the pin layer never rendered any
+    // features" while the pins were on screen the whole time. The demo-day
+    // compose stack serves the build too, so the dev server was the only place
+    // the specs could ever have passed.
+    //
+    // Assigning it always is harmless: it is a reference to an object this page
+    // already owns and renders from, on a page behind the session guard, and it
+    // grants a reader nothing they could not get from the DOM. Keeping the two
+    // environments identical is worth more here than hiding a debug handle.
+    (window as unknown as { __portfolioMap?: MapLibreMap }).__portfolioMap = map;
 
     map.addControl(new NavigationControl({ showCompass: false }), 'top-right');
     // Bottom-right: the scenario slider sits bottom-left.
@@ -277,7 +289,13 @@ export function PortfolioMap({ pins, basemap }: Props) {
   }, []);
 
   return (
-    <div className="absolute inset-0" data-testid="portfolio-map">
+    <div
+      className="absolute inset-0"
+      data-testid="portfolio-map"
+      /* A DOM-level readiness signal, so a spec can wait on the pin layer
+         without reaching for the window handle above. */
+      data-map-ready={ready ? 'true' : 'false'}
+    >
       {/*
         h-full, not `absolute inset-0`. maplibre-gl.css sets
         `.maplibregl-map { position: relative }` on this very element and
@@ -305,7 +323,7 @@ function Legend({ scoredNow, total }: { scoredNow: number; total: number }) {
   return (
     <div
       data-testid="map-legend"
-      className="rounded-md border border-black/10 bg-white/85 px-3 py-2 text-xs shadow-sm backdrop-blur dark:border-white/15 dark:bg-black/70"
+      className="rounded-md border border-rule bg-white/85 px-3 py-2 text-xs shadow-sm backdrop-blur dark:border-rule dark:bg-black/70"
     >
       <div className="mb-1 font-medium">Band at selected scenario</div>
       <ul className="flex flex-col gap-0.5">
@@ -343,7 +361,7 @@ function HazardToggles({
   onToggle: (key: 'flood' | 'heat') => void;
 }) {
   return (
-    <div className="rounded-md border border-black/10 bg-white/85 px-3 py-2 text-xs shadow-sm backdrop-blur dark:border-white/15 dark:bg-black/70">
+    <div className="rounded-md border border-rule bg-white/85 px-3 py-2 text-xs shadow-sm backdrop-blur dark:border-rule dark:bg-black/70">
       <div className="mb-1 font-medium">Hazard layers</div>
       {(['flood', 'heat'] as const).map((key) => (
         <label key={key} className="flex items-center gap-1.5 capitalize">

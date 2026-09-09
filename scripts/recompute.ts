@@ -18,6 +18,7 @@ import process from 'node:process';
 import { Pool } from 'pg';
 import 'dotenv/config';
 
+import { refreshReferenceIndex } from '../lib/index/inputs';
 import { recomputeAll } from '../lib/valuation/recompute';
 
 export async function recompute(connectionString: string) {
@@ -27,8 +28,17 @@ export async function recompute(connectionString: string) {
   try {
     await client.query('BEGIN');
     const result = await recomputeAll(client);
+    /*
+      The reference index is chained INSIDE this transaction, not offered as a
+      separate step (S21). `score_inputs` snapshots the hotspot exposure and the
+      2050 haircuts this pass just moved, and AC-15 asserts the snapshot equals
+      the live `v_hotspot_exposure`. Every caller of this function - the CLI, the
+      Playwright bootstrap and the db project's global setup - therefore gets a
+      consistent pair rather than each having to remember the second half.
+    */
+    const reference = await refreshReferenceIndex(client);
     await client.query('COMMIT');
-    return result;
+    return { ...result, reference };
   } catch (cause) {
     await client.query('ROLLBACK').catch(() => undefined);
     throw cause;
@@ -56,11 +66,11 @@ async function main(): Promise<void> {
   );
   console.log(`[recompute] done in ${seconds}s`);
 
-  /*
-    S21 chains `npm run prep:reference` here, because score_inputs snapshots
-    hotspot exposure at prep time and a recompute can move it. Left as a note
-    rather than a call until compute-reference.ts exists.
-  */
+  console.log(
+    `[recompute] reference index for ${result.reference.hotspots} hotspots ` +
+      `(${result.reference.min_index}-${result.reference.max_index}) ` +
+      `as of ${result.reference.as_of}`,
+  );
 }
 
 const invokedDirectly =

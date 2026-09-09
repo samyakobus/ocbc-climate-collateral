@@ -102,16 +102,16 @@ export function HaircutBreakdown({
   return (
     <section
       data-testid="haircut-breakdown"
-      className="rounded-lg border border-black/10 dark:border-white/15"
+      className="panel avoid-break"
     >
-      <header className="flex flex-wrap items-baseline justify-between gap-2 border-b border-black/10 px-4 py-2.5 dark:border-white/15">
+      <header className="flex flex-wrap items-baseline justify-between gap-2 border-b border-rule px-4 py-2.5 dark:border-rule">
         <h2 className="text-sm font-semibold">Haircut breakdown</h2>
         <span className="text-xs opacity-60">
           Every figure is a stored valuation column, not recomputed here.
         </span>
       </header>
 
-      <table className="w-full text-sm">
+      <table className="data-table">
         <thead>
           <tr className="text-left text-xs opacity-60">
             <th scope="col" className="px-4 py-1.5 font-medium">
@@ -159,7 +159,7 @@ export function HaircutBreakdown({
             </tr>
           ))}
 
-          <tr className="border-t border-black/10 dark:border-white/15">
+          <tr className="border-t border-rule">
             <th scope="row" className="px-4 py-2 text-left font-normal">
               Chronic subtotal
               <div className="text-xs opacity-60">heat plus PM2.5, capped at 5%</div>
@@ -201,7 +201,7 @@ export function HaircutBreakdown({
         </tbody>
       </table>
 
-      <dl className="grid grid-cols-2 gap-x-4 gap-y-1.5 border-t border-black/10 px-4 py-3 text-sm sm:grid-cols-4 dark:border-white/15">
+      <dl className="grid grid-cols-2 gap-x-4 gap-y-1.5 border-t border-rule px-4 py-3 text-sm sm:grid-cols-4 dark:border-rule">
         <Figure label="Appraised value" value={money(appraisedValueSgd)} />
         <Figure
           label="Adjusted value"

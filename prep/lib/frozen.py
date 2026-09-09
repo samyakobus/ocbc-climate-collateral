@@ -74,6 +74,17 @@ SATELLITE_TILE_COLUMNS = (
     "id", "region", "bbox", "capture_date", "cached_path", "live_url", "fetched_at", "provider",
 )
 
+#: One row per collateral pin (S43). This is the MANIFEST that maps a property
+#: to its cached thumbnail, and it has two readers: `prep/fetch_thumbs.py`
+#: replays it under `--source=frozen`, and `prep/gen_portfolio.py`'s emitter
+#: reads it to write `collateral.satellite_thumb_path` into `03_portfolio.sql`.
+#: Keeping it a committed CSV rather than a lookup inside one script is what
+#: lets those two agree without either importing the other.
+SATELLITE_THUMB_COLUMNS = (
+    "collateral_id", "cached_path", "live_url", "capture_date", "provider",
+    "layer", "tile_z", "tile_x", "tile_y", "mean_luminance", "fetched_at",
+)
+
 FILES = {
     "hazard_samples": HAZARD_SAMPLE_COLUMNS,
     "site_modifiers": SITE_MODIFIER_COLUMNS,
@@ -81,6 +92,7 @@ FILES = {
     "collateral_updates": COLLATERAL_UPDATE_COLUMNS,
     "environmental_events": ENVIRONMENTAL_EVENT_COLUMNS,
     "satellite_tiles": SATELLITE_TILE_COLUMNS,
+    "satellite_thumbs": SATELLITE_THUMB_COLUMNS,
 }
 
 

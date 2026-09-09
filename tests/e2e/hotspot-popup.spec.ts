@@ -19,6 +19,8 @@ import { expect, test, type Page } from '@playwright/test';
 const PASSWORD = 'Demo!2026';
 
 async function loginAsRiskManager(page: Page) {
+  page.on('console', (m) => { if (m.type() === 'error') console.log('PAGE CONSOLE ERROR:', m.text().slice(0, 300)); });
+  page.on('pageerror', (e) => console.log('PAGE ERROR:', e.message.slice(0, 300)));
   await page.goto('/login');
   await page.getByLabel('Email').fill('risk@ocbc.demo');
   await page.getByLabel('Password').fill(PASSWORD);
@@ -32,6 +34,13 @@ async function openDashboard(page: Page) {
   await page.getByTestId('ai-heading').waitFor();
   await page.locator('canvas.maplibregl-canvas').first().waitFor();
 
+  /* The DOM readiness signal first, then the handle. See `support/map.ts` for
+     why the order matters: the handle was once eliminated from the build and
+     every map spec blamed the map for it. */
+  await expect(page.getByTestId('hotspot-map')).toHaveAttribute('data-map-ready', 'true', {
+    timeout: 90_000,
+  });
+
   await expect
     .poll(
       async () =>
@@ -40,7 +49,11 @@ async function openDashboard(page: Page) {
           if (!map || !map.isStyleLoaded()) return 0;
           return map.queryRenderedFeatures({ layers: ['hotspot-pointers'] }).length;
         }),
-      { timeout: 30_000, message: 'the hotspot layer never rendered any pointers' },
+      /* Generous, because this may be the first hit on /ai against a cold dev
+         server: Turbopack compiles the MapLibre bundle on demand and that first
+         compile can take most of a minute. The assertion still fails if the
+         pointers never arrive. */
+      { timeout: 90_000, message: 'the hotspot layer never rendered any pointers' },
     )
     .toBeGreaterThan(0);
 }
@@ -50,6 +63,9 @@ type MapHandle = {
   queryRenderedFeatures(o: { layers: string[] }): { properties: Record<string, string> }[];
   getPaintProperty(layer: string, property: string): unknown;
 };
+
+/* The first /ai render compiles the map bundle; give the whole file room. */
+test.describe.configure({ timeout: 120_000 });
 
 test.describe('AC-15: the hotspot popup', () => {
   test('renders a pointer for every hotspot', async ({ page }) => {
@@ -67,14 +83,17 @@ test.describe('AC-15: the hotspot popup', () => {
     await openDashboard(page);
 
     const first = page.locator('[data-testid^="hotspot-item-"]').first();
-    const name = (await first.textContent()) ?? '';
+    const id = (await first.getAttribute('data-testid'))!.replace('hotspot-item-', '');
     await first.click();
 
+    /* Identity, not a substring of the list row. The panel carries the id it was
+       opened for, so this asserts that clicking one hotspot opens that hotspot
+       rather than that two pieces of text happen to overlap. */
     const popup = page.getByTestId('hotspot-popup');
     await expect(popup).toBeVisible();
-    await expect(page.getByTestId('hotspot-name')).toHaveText(name.split('S$')[0].trim().slice(0, 20), {
-      timeout: 5000,
-    });
+    await expect(popup).toHaveAttribute('data-hotspot-id', id);
+
+    await expect(page.getByTestId('hotspot-name')).not.toBeEmpty();
     await expect(page.getByTestId('hotspot-exposure')).toContainText('S$');
     await expect(page.getByTestId('hotspot-share')).toContainText('%');
     await expect(page.getByTestId('hotspot-summary')).toBeVisible();
@@ -139,8 +158,17 @@ test.describe('AC-14 and AC-16: the dashboard renders with the network down', ()
     await loginAsRiskManager(page);
 
     /* Block everything that is not this app. If any panel needed the network at
-       render time, it would fail here rather than on stage. */
-    await context.route(/^(?!http:\/\/localhost:3000).*/, (route) => route.abort());
+       render time, it would fail here rather than on stage.
+
+       The origin is read from the page rather than written down. The harness
+       derives the application port from the runner's process id, so a literal
+       `localhost:3000` allowlist blocked the application itself and the
+       navigation below died with ERR_FAILED. */
+    const appOrigin = new URL(page.url()).origin;
+    await context.route(
+      (url) => url.origin !== appOrigin,
+      (route) => route.abort(),
+    );
 
     await page.goto('/ai');
     await expect(page.getByTestId('ai-heading')).toBeVisible();
@@ -162,9 +190,17 @@ test.describe('AC-14 and AC-16: the dashboard renders with the network down', ()
 
     const before = await page.locator('[data-testid^="news-item-"]').count();
 
-    /* The refresh route's own outbound call is what fails; the route answers
-       200 with ok:false, and the page keeps its items. */
-    await context.route(/^(?!http:\/\/localhost:3000).*/, (route) => route.abort());
+    /* Every request from this point on is aborted, the application's own
+       included. The server action therefore rejects in the browser, the button
+       takes its catch path and reports the failure, and the rendered items are
+       untouched because nothing re-fetched them.
+
+       Aborting the application origin too is deliberate here, and it is the
+       only way this spec can force the failure by itself: the refresh route's
+       own outbound call is made by the SERVER, which a browser route handler
+       cannot reach. Pointing the feed hosts at a dead port is worker-a's
+       offline spec (#34); this one covers the client half. */
+    await context.route(/.*/, (route) => route.abort());
     await page.getByTestId('refresh-news').click();
 
     await expect(page.getByTestId('refresh-news-status')).toBeVisible({ timeout: 30_000 });

@@ -18,13 +18,17 @@
     "prep:narratives": "tsx scripts/gen-narratives.ts",
     "prep:scores": "tsx scripts/gen-hotspot-scores.ts",
     "prep:basemap": "tsx scripts/fetch-basemap.ts",
+    "prep:thumbs": "python -m prep.fetch_thumbs",
+    "cache:prune": "tsx scripts/cache-prune.ts",
     "test": "vitest run",
     "test:component": "vitest run --project component",
     "test:db": "vitest run --project db",
     "test:e2e": "playwright test",
-    "db:reset-rules": "tsx scripts/db-reset-rules.ts"
+    "db:reset-rules": "tsx scripts/db-reset-rules.ts",
+    "verify:all": "tsx scripts/verify-all.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.124.0",
     "bcryptjs": "^3.0.3",
     "iron-session": "^9.0.1",
     "maplibre-gl": "^6.8.0",

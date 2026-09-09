@@ -16,6 +16,7 @@
 
 import type { Hotspot } from '@/app/(app)/ai/queries';
 import { ScoreGauge } from './ScoreGauge';
+import { inputFieldLabel, scoreInputRows } from './score-inputs';
 
 export type HotspotPopupProps = {
   hotspot: Hotspot | null;
@@ -33,32 +34,17 @@ function percent(fraction: number): string {
   return `${(fraction * 100).toFixed(1)}%`;
 }
 
-/** `score_inputs` keys read badly raw: `recent_event_count_90d` -> "Recent event count 90d". */
-function label(key: string): string {
-  const spaced = key.replace(/_/g, ' ');
-  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
-}
-
-function renderValue(value: unknown): string {
-  if (value === null || value === undefined) return '-';
-  if (typeof value === 'number') {
-    return Number.isInteger(value) ? String(value) : value.toFixed(4).replace(/0+$/, '');
-  }
-  if (typeof value === 'object') return JSON.stringify(value);
-  return String(value);
-}
-
 export function HotspotPopup({ hotspot, hotspots, onSelect, onClose }: HotspotPopupProps) {
   if (!hotspot) {
     return (
       <aside
         data-testid="hotspot-list"
-        className="flex max-h-[26rem] flex-col overflow-y-auto rounded-lg border border-black/10 dark:border-white/15"
+        className="flex max-h-[26rem] flex-col overflow-y-auto panel"
       >
-        <h2 className="border-b border-black/10 px-4 py-2.5 text-sm font-semibold dark:border-white/15">
+        <h2 className="border-b border-rule px-4 py-2.5 text-sm font-semibold dark:border-rule">
           Hotspots by exposure ({hotspots.length})
         </h2>
-        <ul className="divide-y divide-black/5 dark:divide-white/10">
+        <ul className="divide-y divide-rule">
           {hotspots.map((h) => (
             <li key={h.id}>
               <button
@@ -82,15 +68,16 @@ export function HotspotPopup({ hotspot, hotspots, onSelect, onClose }: HotspotPo
     );
   }
 
-  const inputs = hotspot.score_inputs;
+  /* Ordered and formatted by `score-inputs.ts`, never by JSONB key order. */
+  const inputRows = scoreInputRows(hotspot.score_inputs);
 
   return (
     <aside
       data-testid="hotspot-popup"
       data-hotspot-id={hotspot.id}
-      className="flex max-h-[26rem] flex-col overflow-y-auto rounded-lg border border-black/10 dark:border-white/15"
+      className="flex max-h-[26rem] flex-col overflow-y-auto panel"
     >
-      <header className="flex items-start justify-between gap-2 border-b border-black/10 px-4 py-2.5 dark:border-white/15">
+      <header className="flex items-start justify-between gap-2 border-b border-rule px-4 py-2.5 dark:border-rule">
         <div>
           <h2 data-testid="hotspot-name" className="text-sm font-semibold">
             {hotspot.name}
@@ -136,12 +123,12 @@ export function HotspotPopup({ hotspot, hotspots, onSelect, onClose }: HotspotPo
           counts in both, so these shares sum to more than the book.
         </p>
 
-        <div className="border-t border-black/10 pt-3 dark:border-white/15">
+        <div className="border-t border-rule pt-3 dark:border-rule">
           <ScoreGauge
             llmScore={hotspot.llm_score}
             referenceIndex={hotspot.reference_index}
-            divergenceFlag={hotspot.divergence_flag}
             scoreFallback={hotspot.score_fallback}
+            scoreValidated={hotspot.score_validated}
             scoreSource={hotspot.score_source}
             model={hotspot.model}
           />
@@ -153,8 +140,8 @@ export function HotspotPopup({ hotspot, hotspots, onSelect, onClose }: HotspotPo
             <ul className="mt-1 space-y-1">
               {hotspot.llm_drivers.map((driver, index) => (
                 <li key={`${driver.input_field}-${index}`} className="text-xs">
-                  <span className="font-medium">{label(driver.input_field)}</span>{' '}
-                  <span className="opacity-70">{driver.direction}</span>
+                  <span className="font-medium">{inputFieldLabel(driver.input_field)}</span>{' '}
+                  <span className="text-muted">{driver.direction}</span>
                   {driver.note ? <span className="opacity-80"> &middot; {driver.note}</span> : null}
                 </li>
               ))}
@@ -172,18 +159,43 @@ export function HotspotPopup({ hotspot, hotspots, onSelect, onClose }: HotspotPo
         ) : null}
 
         <div>
-          <h3 className="text-xs font-medium opacity-70">Inputs the score was formed from</h3>
-          {inputs && Object.keys(inputs).length > 0 ? (
-            <dl data-testid="hotspot-inputs" className="mt-1 grid grid-cols-2 gap-x-3 gap-y-0.5 text-xs">
-              {Object.entries(inputs).map(([key, value]) => (
-                <div key={key} className="contents">
-                  <dt className="opacity-60">{label(key)}</dt>
-                  <dd className="tabular-nums">{renderValue(value)}</dd>
-                </div>
-              ))}
-            </dl>
+          <h3 className="text-xs font-medium text-muted">Inputs the score was formed from</h3>
+          {inputRows.length > 0 ? (
+            <>
+              <dl
+                data-testid="hotspot-inputs"
+                className="mt-1 grid grid-cols-[1fr_auto] gap-x-3 gap-y-0.5 text-xs"
+              >
+                {inputRows.map((row) => (
+                  <div key={row.key} className="contents">
+                    <dt
+                      data-testid={`hotspot-input-${row.key}`}
+                      data-sent-to-model={row.sentToModel ? 'true' : 'false'}
+                      className="text-muted"
+                    >
+                      {row.label}
+                      {row.sentToModel ? null : (
+                        <span
+                          aria-label="withheld from the model"
+                          title="Withheld from the prompt (ADR-3)"
+                          className="ml-1 text-faint"
+                        >
+                          &#9679;
+                        </span>
+                      )}
+                    </dt>
+                    <dd className="text-right tabular-nums">{row.value}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="mt-1.5 text-[11px] text-faint">
+                A dot marks a figure the model was never shown. ADR-3 withholds the
+                reference index and its two denominators from the prompt, so the
+                deterministic number and the model score stay independent.
+              </p>
+            </>
           ) : (
-            <p data-testid="hotspot-inputs-empty" className="mt-1 text-xs opacity-60">
+            <p data-testid="hotspot-inputs-empty" className="mt-1 text-xs text-muted">
               No input record stored yet. <code>npm run prep:reference</code> writes it.
             </p>
           )}

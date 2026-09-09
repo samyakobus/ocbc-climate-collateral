@@ -55,7 +55,13 @@ CAPTURE_LOOKBACK_DAYS = 6
 DEFAULT_CAPTURE = date(2026, 9, 5)
 
 #: z6 frames a city and its surrounding coast in one 256px tile, which is what
-#: the strip wants. Level9 tops out at z9 for this layer.
+#: the strip wants.
+#:
+#: The deepest zoom this layer serves is **8**, not the 9 the
+#: `GoogleMapsCompatible_Level9` name suggests. Measured while building
+#: `fetch_thumbs.py`: across the unique tiles the 200 pins fall in, z8 returned
+#: all 13 and z9 returned 12 of 14. Recorded here because the layer name is
+#: actively misleading and cost one run to discover.
 TILE_ZOOM = 6
 
 #: One tile per metro. Same twelve metros the basemap cities archive covers, so

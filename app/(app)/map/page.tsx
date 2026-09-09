@@ -63,7 +63,7 @@ export default async function MapPage() {
         never resizes. The viewport calculation subtracts the ribbon, the
         nav and this page header.
       */}
-      <div className="relative h-[calc(100dvh-9.5rem)] min-h-[32rem] border-t border-black/10 dark:border-white/15">
+      <div className="relative h-[calc(100dvh-9.5rem)] min-h-[32rem] border-t border-rule">
         <PortfolioMap pins={pins} basemap={basemap} />
       </div>
     </section>

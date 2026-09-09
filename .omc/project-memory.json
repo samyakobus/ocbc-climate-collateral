@@ -1,0 +1,568 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1788884671243,
+  "projectRoot": "C:\\Coding\\2026_OCBC_OPC",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      },
+      {
+        "name": "TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "tsconfig.json"
+        ]
+      },
+      {
+        "name": "Python",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "requirements.txt"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "next",
+        "version": "16.3.4",
+        "category": "fullstack"
+      },
+      {
+        "name": "react",
+        "version": "19.2.8",
+        "category": "frontend"
+      },
+      {
+        "name": "react-dom",
+        "version": "19.2.8",
+        "category": "frontend"
+      },
+      {
+        "name": "@playwright/test",
+        "version": "1.63.0",
+        "category": "testing"
+      },
+      {
+        "name": "vitest",
+        "version": "5.0.0",
+        "category": "testing"
+      }
+    ],
+    "packageManager": "npm",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": "npm run build",
+    "testCommand": "npm test",
+    "lintCommand": "npm run lint",
+    "devCommand": "npm run dev",
+    "scripts": {
+      "dev": "next dev",
+      "build": "next build",
+      "start": "next start",
+      "lint": "eslint",
+      "typecheck": "tsc --noEmit",
+      "db:up": "tsx scripts/db-server.ts",
+      "db:migrate": "tsx scripts/db-migrate.ts",
+      "db:seed": "tsx scripts/seed.ts",
+      "db:recompute": "tsx scripts/recompute.ts",
+      "verify:dashboard": "tsx scripts/verify-dashboard.ts",
+      "prep:reference": "tsx scripts/compute-reference.ts",
+      "prep:narratives": "tsx scripts/gen-narratives.ts",
+      "prep:scores": "tsx scripts/gen-hotspot-scores.ts",
+      "prep:basemap": "tsx scripts/fetch-basemap.ts",
+      "test": "vitest run",
+      "test:component": "vitest run --project component",
+      "test:db": "vitest run --project db",
+      "test:e2e": "playwright test",
+      "db:reset-rules": "tsx scripts/db-reset-rules.ts"
+    }
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "app",
+      "components",
+      "docs",
+      "lib",
+      "public",
+      "scripts",
+      "tests"
+    ],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "app": {
+      "path": "app",
+      "purpose": "Application code",
+      "fileCount": 4,
+      "lastAccessed": 1788884670996,
+      "keyFiles": [
+        "favicon.ico",
+        "globals.css",
+        "layout.tsx",
+        "page.tsx"
+      ]
+    },
+    "components": {
+      "path": "components",
+      "purpose": "UI components",
+      "fileCount": 0,
+      "lastAccessed": 1788884670999,
+      "keyFiles": []
+    },
+    "data": {
+      "path": "data",
+      "purpose": "Data files",
+      "fileCount": 0,
+      "lastAccessed": 1788884671028,
+      "keyFiles": []
+    },
+    "db": {
+      "path": "db",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1788884671029,
+      "keyFiles": []
+    },
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 2,
+      "lastAccessed": 1788884671068,
+      "keyFiles": [
+        "demo-script.md",
+        "sources.md"
+      ]
+    },
+    "lib": {
+      "path": "lib",
+      "purpose": "Library code",
+      "fileCount": 0,
+      "lastAccessed": 1788884671095,
+      "keyFiles": []
+    },
+    "plan_from_user": {
+      "path": "plan_from_user",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1788884671098,
+      "keyFiles": [
+        "idea.md"
+      ]
+    },
+    "prep": {
+      "path": "prep",
+      "purpose": null,
+      "fileCount": 7,
+      "lastAccessed": 1788884671109,
+      "keyFiles": [
+        "build_hotspots.py",
+        "build_regional.py",
+        "fetch_events.py",
+        "fetch_tiles.py",
+        "gen_portfolio.py"
+      ]
+    },
+    "public": {
+      "path": "public",
+      "purpose": "Public files",
+      "fileCount": 0,
+      "lastAccessed": 1788884671128,
+      "keyFiles": []
+    },
+    "scripts": {
+      "path": "scripts",
+      "purpose": "Build/utility scripts",
+      "fileCount": 11,
+      "lastAccessed": 1788884671134,
+      "keyFiles": [
+        "db-migrate.ts",
+        "db-reset-rules.ts",
+        "db-server.ts",
+        "e2e-server.ts",
+        "fetch-basemap.ts"
+      ]
+    },
+    "test-results": {
+      "path": "test-results",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1788884671137,
+      "keyFiles": []
+    },
+    "tests": {
+      "path": "tests",
+      "purpose": "Test files",
+      "fileCount": 0,
+      "lastAccessed": 1788884671139,
+      "keyFiles": []
+    },
+    "app\\api": {
+      "path": "app\\api",
+      "purpose": "API routes",
+      "fileCount": 0,
+      "lastAccessed": 1788884671142,
+      "keyFiles": []
+    },
+    "db\\migrations": {
+      "path": "db\\migrations",
+      "purpose": "Database migrations",
+      "fileCount": 2,
+      "lastAccessed": 1788884671145,
+      "keyFiles": [
+        "0001_schema.sql",
+        "0002_views.sql"
+      ]
+    },
+    "lib\\config": {
+      "path": "lib\\config",
+      "purpose": "Configuration files",
+      "fileCount": 1,
+      "lastAccessed": 1788884671148,
+      "keyFiles": [
+        "env.ts"
+      ]
+    },
+    "prep\\lib": {
+      "path": "prep\\lib",
+      "purpose": "Library code",
+      "fileCount": 6,
+      "lastAccessed": 1788884671150,
+      "keyFiles": [
+        "context.py",
+        "ee_client.py",
+        "frozen.py"
+      ]
+    },
+    "tests\\fixtures": {
+      "path": "tests\\fixtures",
+      "purpose": "Test fixtures",
+      "fileCount": 2,
+      "lastAccessed": 1788884671168,
+      "keyFiles": [
+        "cases.ts",
+        "pinned-samples.ts"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "scripts/verify-all.ts",
+      "accessCount": 14,
+      "lastAccessed": 1788893848198,
+      "type": "file"
+    },
+    {
+      "path": "tests/prep/test_clean_machine.py",
+      "accessCount": 14,
+      "lastAccessed": 1788918224812,
+      "type": "file"
+    },
+    {
+      "path": "tests/e2e/offline.spec.ts",
+      "accessCount": 9,
+      "lastAccessed": 1788891063881,
+      "type": "file"
+    },
+    {
+      "path": "tests/offline/checklist.md",
+      "accessCount": 8,
+      "lastAccessed": 1788919716828,
+      "type": "file"
+    },
+    {
+      "path": "scripts/e2e-server.ts",
+      "accessCount": 6,
+      "lastAccessed": 1788890267169,
+      "type": "file"
+    },
+    {
+      "path": "lib/index/validate-score.ts",
+      "accessCount": 5,
+      "lastAccessed": 1788889467379,
+      "type": "file"
+    },
+    {
+      "path": "README.md",
+      "accessCount": 5,
+      "lastAccessed": 1788919703946,
+      "type": "file"
+    },
+    {
+      "path": "lib/index/inputs.ts",
+      "accessCount": 3,
+      "lastAccessed": 1788886274343,
+      "type": "file"
+    },
+    {
+      "path": "app/globals.css",
+      "accessCount": 3,
+      "lastAccessed": 1788886626177,
+      "type": "file"
+    },
+    {
+      "path": "test-results/s27/07-map.png",
+      "accessCount": 3,
+      "lastAccessed": 1788888108677,
+      "type": "file"
+    },
+    {
+      "path": "playwright.config.ts",
+      "accessCount": 3,
+      "lastAccessed": 1788889462556,
+      "type": "file"
+    },
+    {
+      "path": "scripts/gen-hotspot-scores.ts",
+      "accessCount": 3,
+      "lastAccessed": 1788890248810,
+      "type": "file"
+    },
+    {
+      "path": "scripts/recompute.ts",
+      "accessCount": 2,
+      "lastAccessed": 1788885763837,
+      "type": "file"
+    },
+    {
+      "path": "app/(auth)/login/page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1788886528350,
+      "type": "file"
+    },
+    {
+      "path": "test-results/s27/02-ai.png",
+      "accessCount": 2,
+      "lastAccessed": 1788887694768,
+      "type": "file"
+    },
+    {
+      "path": "tests/e2e/visual-capture.spec.ts",
+      "accessCount": 2,
+      "lastAccessed": 1788887806552,
+      "type": "file"
+    },
+    {
+      "path": "lib/narrative/validate.ts",
+      "accessCount": 2,
+      "lastAccessed": 1788889315770,
+      "type": "file"
+    },
+    {
+      "path": "lib/narrative/prompt.ts",
+      "accessCount": 2,
+      "lastAccessed": 1788889356113,
+      "type": "file"
+    },
+    {
+      "path": "scripts/gen-narratives.ts",
+      "accessCount": 2,
+      "lastAccessed": 1788890256897,
+      "type": "file"
+    },
+    {
+      "path": "package.json",
+      "accessCount": 2,
+      "lastAccessed": 1788890919393,
+      "type": "file"
+    },
+    {
+      "path": "lib/index/reference.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788885629090,
+      "type": "file"
+    },
+    {
+      "path": "scripts/compute-reference.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788885729799,
+      "type": "file"
+    },
+    {
+      "path": "tests/fixtures/hotspots.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788885862949,
+      "type": "file"
+    },
+    {
+      "path": "tests/unit/reference-index.test.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788885899943,
+      "type": "file"
+    },
+    {
+      "path": "tests/unit/prompt-payload.test.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788885972946,
+      "type": "file"
+    },
+    {
+      "path": "tests/db/reference-index.test.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788886116264,
+      "type": "file"
+    },
+    {
+      "path": "app/actions/rules.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788886327353,
+      "type": "file"
+    },
+    {
+      "path": "components/IllustrativeRibbon.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1788886465154,
+      "type": "file"
+    },
+    {
+      "path": "components/case/PrintButton.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1788886668175,
+      "type": "file"
+    },
+    {
+      "path": "lib/index/llm-score.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788886923021,
+      "type": "file"
+    },
+    {
+      "path": "lib/index/store.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788886968764,
+      "type": "file"
+    },
+    {
+      "path": "test-results/s27/05-case.png",
+      "accessCount": 1,
+      "lastAccessed": 1788887035909,
+      "type": "file"
+    },
+    {
+      "path": "app/actions/rescore-hotspot.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788887045125,
+      "type": "file"
+    },
+    {
+      "path": "test-results/s27/06-case-print.png",
+      "accessCount": 1,
+      "lastAccessed": 1788887051234,
+      "type": "file"
+    },
+    {
+      "path": "test-results/s27/03-portfolio.png",
+      "accessCount": 1,
+      "lastAccessed": 1788887118519,
+      "type": "file"
+    },
+    {
+      "path": "tests/unit/score-validate.test.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788887153794,
+      "type": "file"
+    },
+    {
+      "path": "tests/unit/score-badges.test.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788887307824,
+      "type": "file"
+    },
+    {
+      "path": "tests/db/hotspot-score.test.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788887381678,
+      "type": "file"
+    },
+    {
+      "path": "test-results/s27/04-cases.png",
+      "accessCount": 1,
+      "lastAccessed": 1788888204549,
+      "type": "file"
+    },
+    {
+      "path": "test-results/s27/01-login.png",
+      "accessCount": 1,
+      "lastAccessed": 1788888244315,
+      "type": "file"
+    },
+    {
+      "path": "lib/narrative/store.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788888983690,
+      "type": "file"
+    },
+    {
+      "path": "app/api/narrative/regenerate/route.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788889146903,
+      "type": "file"
+    },
+    {
+      "path": "app/actions/narrative.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788889165670,
+      "type": "file"
+    },
+    {
+      "path": "components/case/NarrativeBlock.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1788889183378,
+      "type": "file"
+    },
+    {
+      "path": "tests/unit/narrative-fallback.test.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788889264255,
+      "type": "file"
+    },
+    {
+      "path": "components/ai/ScoreBadges.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1788889328249,
+      "type": "file"
+    },
+    {
+      "path": "components/ai/ScoreGauge.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1788889366008,
+      "type": "file"
+    },
+    {
+      "path": "components/ai/HotspotPopup.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1788889374080,
+      "type": "file"
+    },
+    {
+      "path": "tests/db/narrative-assertions.test.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788889406545,
+      "type": "file"
+    },
+    {
+      "path": "components/ai/score-inputs.ts",
+      "accessCount": 1,
+      "lastAccessed": 1788889439753,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}

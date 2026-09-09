@@ -17,6 +17,8 @@
 
 import { migrate } from '../../scripts/db-migrate';
 import { startDbServer } from '../../scripts/db-server';
+import { scorePass } from '../../scripts/gen-hotspot-scores';
+import { narrativePass } from '../../scripts/gen-narratives';
 import { recompute } from '../../scripts/recompute';
 import { seedDatabase } from '../../scripts/seed';
 import { waitForDb } from '../../scripts/wait-for-db';
@@ -70,6 +72,18 @@ export default async function setup() {
     log(
       `[recompute] ${result.valuations} valuations, ` +
         `${result.recommendations} recommendations`,
+    );
+
+    /* Then the two generative passes with NO model client, so the db project
+       sees the same state the demo host shows: every hotspot in the tested
+       fallback state, and a rule-text narrative on every pinned case. Passing
+       no client keeps the suite hermetic on a machine that happens to have an
+       API key; `scorePass` explains why that matters. */
+    const scores = await scorePass(url);
+    const narratives = await narrativePass(url);
+    log(
+      `[prep] ${scores.fallback} hotspots in fallback, ` +
+        `${narratives.cases + narratives.portfolios} narratives`,
     );
   } catch (cause) {
     await server.stop();

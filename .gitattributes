@@ -1,0 +1,39 @@
+# Line endings, pinned. AC-13 (S30) depends on this.
+#
+# Git on Windows defaults to `core.autocrlf=true`, which rewrites every text
+# file to CRLF on checkout. The blobs stored in the repository are LF either
+# way, so nothing looks wrong in a diff, and a working tree whose files were
+# written by the generators looks correct too.
+#
+# A FRESH CLONE does not. Measured on 2026-09-08: `db/seed/04_samples.sql` came
+# out of a clone 5,160 bytes larger than the file the generator writes, and
+# `data/synthetic/portfolio.csv` 201 bytes larger, one byte per line in each.
+#
+# The application does not care. Postgres and Python's csv reader both accept
+# either ending. What breaks is the property S30 exists to protect: that the
+# committed artefacts can be regenerated and compared. On a clean clone every
+# generated file differed from its generator's output in every line, so
+# `tests/prep/test_clean_machine.py` failed and a real drift would have been
+# invisible inside the noise.
+#
+# Every generator in this repository writes LF explicitly (`newline="\n"` in the
+# Python emitters, `writeFileSync` in the TypeScript ones). This makes the
+# checkout agree with them.
+
+* text=auto eol=lf
+
+# The artefacts the clean-machine tests compare byte for byte. Declared
+# individually as well, so the rule survives someone relaxing the line above.
+*.sql  text eol=lf
+*.csv  text eol=lf
+*.json text eol=lf
+*.md   text eol=lf
+
+# Not text. Left untouched, and never diffed as lines.
+*.pmtiles binary
+*.jpg     binary
+*.jpeg    binary
+*.png     binary
+*.ico     binary
+*.woff    binary
+*.woff2   binary

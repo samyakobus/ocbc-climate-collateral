@@ -48,7 +48,7 @@ export function ContextPanel({ factors }: ContextPanelProps) {
     return (
       <section
         data-testid="context-panel"
-        className="rounded-lg border border-black/10 px-4 py-3 text-sm dark:border-white/15"
+        className="panel avoid-break px-4 py-3 text-sm"
       >
         <h2 className="text-sm font-semibold">Context factors</h2>
         <p className="mt-1 text-xs opacity-70">
@@ -61,9 +61,9 @@ export function ContextPanel({ factors }: ContextPanelProps) {
   return (
     <section
       data-testid="context-panel"
-      className="rounded-lg border border-black/10 dark:border-white/15"
+      className="panel avoid-break"
     >
-      <header className="flex flex-wrap items-baseline justify-between gap-2 border-b border-black/10 px-4 py-2.5 dark:border-white/15">
+      <header className="flex flex-wrap items-baseline justify-between gap-2 border-b border-rule px-4 py-2.5 dark:border-rule">
         <h2 className="text-sm font-semibold">Context factors</h2>
         <span className="text-xs opacity-60">
           Measured and shown. None of these enters a haircut.
@@ -71,7 +71,7 @@ export function ContextPanel({ factors }: ContextPanelProps) {
       </header>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[36rem] text-xs">
+        <table className="data-table min-w-[36rem]">
           <thead>
             <tr className="text-left opacity-60">
               <th scope="col" className="px-4 py-1.5 font-medium">Factor</th>
@@ -86,7 +86,7 @@ export function ContextPanel({ factors }: ContextPanelProps) {
               <tr
                 key={factor.factor}
                 data-testid={`context-row-${factor.factor}`}
-                className="border-t border-black/5 dark:border-white/10"
+                className="border-t border-rule"
               >
                 <th scope="row" className="px-4 py-2 text-left font-normal">
                   {humanise(factor.factor)}

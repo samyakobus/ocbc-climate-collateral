@@ -22,6 +22,7 @@ import { revalidatePath } from 'next/cache';
 import { requireRole } from '@/lib/auth/session';
 import { type RuleSetEdit, validateRuleSetEdit } from '@/lib/rules/bands';
 import { transaction } from '@/lib/db/client';
+import { refreshReferenceIndex } from '@/lib/index/inputs';
 import { recomputeAll } from '@/lib/valuation/recompute';
 
 export type RulesState = {
@@ -120,7 +121,23 @@ export async function saveRulesAction(
       );
 
       const result = await recomputeAll(client);
-      return `${result.valuations} valuations and ${result.recommendations} recommendations recomputed across ${result.collateral} properties.`;
+
+      /*
+        The hotspot reference index moves with the thresholds and is refreshed
+        here rather than left to the next prep run (S21). The three editable
+        probabilities scale the flood term, so a threshold edit changes the 2050
+        haircuts that H is built from; without this the AI dashboard would keep
+        showing an index computed against the rule set the risk manager just
+        replaced, on the same screen as the recoloured map. `total_cap`, the
+        index's own divisor, is editable too.
+      */
+      const reference = await refreshReferenceIndex(client);
+
+      return (
+        `${result.valuations} valuations and ${result.recommendations} recommendations ` +
+        `recomputed across ${result.collateral} properties, ` +
+        `${reference.hotspots} hotspot reference indices refreshed.`
+      );
     });
   } catch (cause) {
     const reason = cause instanceof Error ? cause.message : String(cause);

@@ -26,9 +26,36 @@
  * Set `E2E_DATABASE_URL` to point the run at a stack you manage instead, such
  * as the compose database on demo day. Set `PLAYWRIGHT_BASE_URL` to skip the
  * server entirely and drive an application that is already running.
+ *
+ * TWO PROJECTS, and the second one is conditional (S26, S28).
+ *
+ *   default   every spec except the offline suite.
+ *   offline   only `offline.spec.ts`, and only when the three outbound hosts
+ *             have been pointed somewhere dead.
+ *
+ * The offline suite is meaningless against live feeds, so it used to guard
+ * itself with a `test.skip` inside the file. That was correct and it was not
+ * enough: a skip still LISTS as a test, and a green run reading "4 skipped" is
+ * one glance away from being read as coverage that does not exist. Worse, the
+ * S28 gate has to be able to fail when the offline block did not run, and it
+ * cannot tell a deliberate skip from a broken one.
+ *
+ * So the gating moved here. Without the overrides the `offline` project is not
+ * in the array at all: the spec is never collected, never listed, and never
+ * counted. With them it is the only thing that project runs, and any skip
+ * inside it is a real problem.
+ *
+ *   npx playwright test                              default only
+ *   FEED_EONET_BASE=http://127.0.0.1:9 \
+ *   FEED_GIBS_BASE=http://127.0.0.1:9 \
+ *   THUMB_BASE=http://127.0.0.1:9 \
+ *     npx playwright test --project offline          the four offline tests
+ *
+ * `npm run verify:all` runs both, and fails the gate if the offline project
+ * reports a single skip.
  */
 
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices, type Project } from '@playwright/test';
 
 /** True when driving an application someone else started. */
 const externalServer = Boolean(process.env.PLAYWRIGHT_BASE_URL);
@@ -50,8 +77,72 @@ if (!process.env.E2E_PORT) {
 const appPort = Number(process.env.E2E_PORT);
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${appPort}`;
 
+/** Only `tests/e2e/offline.spec.ts`, matched on both path separators. */
+const OFFLINE_SPEC = /offline\.spec\.ts$/;
+
+/**
+ * The three hosts the offline suite needs pointed somewhere dead.
+ *
+ * Empty counts as unset, the same rule `lib/config/env.ts` applies, because
+ * `.env.example` ships all three declared and blank: a developer who copied it
+ * would otherwise enable a project whose whole premise is that the hosts were
+ * changed.
+ */
+const OFFLINE_HOSTS = ['FEED_EONET_BASE', 'FEED_GIBS_BASE', 'THUMB_BASE'] as const;
+
+const overridden = OFFLINE_HOSTS.filter((key) => (process.env[key] ?? '').trim() !== '');
+const offlineEnabled = overridden.length === OFFLINE_HOSTS.length;
+
+/*
+  Say why, once. Playwright re-evaluates this config in every worker process, so
+  the note is fenced behind an environment flag that survives into them; without
+  it the same three lines print once per worker and read like an error.
+*/
+if (!process.env.E2E_OFFLINE_NOTED) {
+  process.env.E2E_OFFLINE_NOTED = '1';
+  if (!offlineEnabled) {
+    const missing = OFFLINE_HOSTS.filter((key) => !overridden.includes(key));
+    console.log(
+      `[playwright] the "offline" project is not in this run: ${missing.join(', ')} ` +
+        `${missing.length === 1 ? 'is' : 'are'} not overridden.\n` +
+        '[playwright] Asserting an offline fallback against a live feed asserts nothing, so the\n' +
+        '[playwright] suite is omitted rather than skipped. To run it:\n' +
+        '[playwright]   FEED_EONET_BASE=http://127.0.0.1:9 FEED_GIBS_BASE=http://127.0.0.1:9 \\\n' +
+        '[playwright]   THUMB_BASE=http://127.0.0.1:9 npx playwright test --project offline',
+    );
+  } else {
+    console.log(
+      '[playwright] the "offline" project is enabled: all three outbound hosts are overridden.',
+    );
+  }
+}
+
+const projects: Project[] = [
+  {
+    name: 'default',
+    testIgnore: OFFLINE_SPEC,
+    use: { ...devices['Desktop Chrome'] },
+  },
+];
+
+if (offlineEnabled) {
+  projects.push({
+    name: 'offline',
+    testMatch: OFFLINE_SPEC,
+    use: { ...devices['Desktop Chrome'] },
+  });
+}
+
 export default defineConfig({
   testDir: './tests/e2e',
+  /*
+    Artifacts go in a directory of this run's own, keyed by the same port.
+    Two runs sharing `test-results/` delete each other's trace and screenshot
+    files mid-write, which surfaces as ENOENT on `browserContext.close` and
+    fails tests that actually passed. That is worse than a plain collision: it
+    reports a red run for a reason that has nothing to do with the application.
+  */
+  outputDir: `./test-results/run-${appPort}`,
   /* AC-9 rewrites the active rule set, so specs share state and run in order. */
   workers: 1,
   fullyParallel: false,
@@ -68,7 +159,7 @@ export default defineConfig({
     video: 'off',
   },
 
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects,
 
   webServer: externalServer
     ? undefined
@@ -81,7 +172,7 @@ export default defineConfig({
           writing to the instance everyone else is working against.
         */
         reuseExistingServer: false,
-        /* Migrating, seeding and recomputing 600 valuations before Next starts. */
+              /* Migrating, seeding and recomputing 600 valuations before Next starts. */
         timeout: 240_000,
         stdout: 'pipe',
         stderr: 'pipe',

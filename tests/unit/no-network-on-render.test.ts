@@ -38,6 +38,7 @@ const SCANNED_DIRS = ['app', 'components', 'lib'] as const;
 export const OUTBOUND_ALLOWED = [
   'app/api/refresh/tiles/route.ts',
   'app/api/refresh/news/route.ts',
+  'app/api/refresh/thumbs/route.ts',
   'app/api/narrative/regenerate/route.ts',
   'app/actions/rescore-hotspot.ts',
 ] as const;
@@ -147,8 +148,18 @@ describe('offline-first rule: no outbound call in a render path', () => {
     expect([...SCANNED_DIRS]).toEqual(['app', 'components', 'lib']);
   });
 
-  it('names exactly the four allowed files of the three entry points', () => {
-    expect(OUTBOUND_ALLOWED).toHaveLength(4);
+  /*
+    The count is asserted, not just the contents. Growing this list is a real
+    decision about the offline guarantee, and a test that only checked the paths
+    would let a fifth entry slip in as a one-line diff nobody reads twice.
+    Changing the number here is the moment to ask whether the new call belongs.
+
+    Five, since S43: `refresh/thumbs` refreshes one property's satellite
+    thumbnail. It is behind a button like the other two refreshes, never on a
+    render path.
+  */
+  it('names exactly the five allowed files, all of them behind a POST or an action', () => {
+    expect(OUTBOUND_ALLOWED).toHaveLength(5);
     for (const path of OUTBOUND_ALLOWED) {
       expect(path.startsWith('app/')).toBe(true);
     }

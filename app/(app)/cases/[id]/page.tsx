@@ -17,11 +17,17 @@ import Link from 'next/link';
 import { requireUser, segmentFor } from '@/lib/auth/session';
 import { SCENARIOS, labelOfScenario, type Scenario } from '@/components/map/scenario';
 import { CaseHeader } from '@/components/case/CaseHeader';
+import { PrintButton } from '@/components/case/PrintButton';
+import { SatelliteThumb } from '@/components/case/SatelliteThumb';
+import { refreshThumbAction } from '@/app/actions/refresh-thumb';
 import { HaircutBreakdown } from '@/components/case/HaircutBreakdown';
 import { AdaptationToggle } from '@/components/case/AdaptationToggle';
 import { ConditionList } from '@/components/case/ConditionList';
 import { ProvenancePanel } from '@/components/case/ProvenancePanel';
 import { ContextPanel } from '@/components/case/ContextPanel';
+import { NarrativeBlock } from '@/components/case/NarrativeBlock';
+import { pool } from '@/lib/db/client';
+import { loadNarrative } from '@/lib/narrative/store';
 import { loadCase } from '../queries';
 
 export const dynamic = 'force-dynamic';
@@ -51,14 +57,49 @@ export default async function CasePage({
   const { collateral, loan, valuation, recommendation, samples, modifiers, adaptation, context } =
     detail;
 
+  /* Stored text only (S25). This screen generates nothing: `prep:narratives`
+     and the regenerate button both run the citation validator before a word of
+     it is written. */
+  const narrative = await loadNarrative(pool(), {
+    type: 'case',
+    id: collateral.id,
+    scenario,
+  });
+
   const backSegment = segmentFor(user.role);
   const backHref = backSegment ? `/cases?segment=${backSegment}` : '/cases';
 
   return (
     <section className="flex flex-col gap-4 p-6">
-      <Link href={backHref} className="text-xs underline opacity-60 hover:opacity-100">
-        Back to cases
-      </Link>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <Link
+          href={backHref}
+          className="print-hide text-xs text-muted underline underline-offset-2 hover:text-accent"
+        >
+          Back to cases
+        </Link>
+        <PrintButton />
+      </div>
+
+      {/*
+        Paper only (S27). On screen this is all in the chrome and the header;
+        on paper the sheet has to identify itself, because a case file leaves
+        the room without the application around it. `print-only` is display:none
+        until the `@media print` block in globals.css turns it on.
+      */}
+      <div className="print-only avoid-break border-b pb-2">
+        <p className="text-[10pt] font-semibold">
+          OCBC Climate Collateral - climate-adjusted collateral assessment
+        </p>
+        <p className="text-[8.5pt]">
+          Collateral {collateral.id} - {collateral.address_line} - scenario{' '}
+          {labelOfScenario(scenario)}
+        </p>
+        <p className="text-[8.5pt]">
+          Synthetic portfolio, illustrative figures. Not a credit decision. Every figure is
+          computed by the stored active rule set; no figure on this sheet is model-assigned.
+        </p>
+      </div>
 
       <CaseHeader
         collateral={collateral}
@@ -76,30 +117,51 @@ export default async function CasePage({
           curveSourceName={collateral.curve_source_name}
         />
       ) : (
-        <p className="rounded-lg border border-black/10 px-4 py-3 text-sm opacity-70 dark:border-white/15">
+        <p className="panel avoid-break px-4 py-3 text-sm text-muted">
           No valuation is stored for this collateral at {labelOfScenario(scenario)}. Run{' '}
           <code>npm run db:recompute</code>.
         </p>
       )}
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <ConditionList recommendation={recommendation} />
-        {valuation ? (
-          <AdaptationToggle valuation={valuation} adaptation={adaptation} />
-        ) : null}
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
+        <div className="flex flex-col gap-4">
+          <ConditionList recommendation={recommendation} />
+          {valuation ? (
+            <AdaptationToggle valuation={valuation} adaptation={adaptation} />
+          ) : null}
+        </div>
+
+        {/*
+          The one live fetch the spec allows, and only on a click. The image
+          itself is a committed same-origin file, so this panel renders with the
+          interface disabled (AC-11) and prints with the case file.
+        */}
+        <SatelliteThumb
+          collateralId={collateral.id}
+          path={collateral.satellite_thumb_path}
+          refresh={refreshThumbAction}
+        />
       </div>
 
-      <ProvenancePanel
-        samples={samples}
-        valuation={valuation}
-        modifiers={modifiers}
-        scenarioLabel={labelOfScenario(scenario)}
-        curveLabel={collateral.curve_label}
-        curveSourceName={collateral.curve_source_name}
-        curveSourceUrl={collateral.curve_source_url}
-      />
+      <NarrativeBlock collateralId={collateral.id} scenario={scenario} narrative={narrative} />
 
-      <ContextPanel factors={context} />
+      {/* `print-urls` prints each source URL beside its link, which is what
+          makes the paper copy answerable on AC-12. It wraps the context panel
+          too: those dataset links are sources as well, and an underline with no
+          target is a dead end on paper. `contents` keeps the flex column. */}
+      <div className="print-urls contents">
+        <ProvenancePanel
+          samples={samples}
+          valuation={valuation}
+          modifiers={modifiers}
+          scenarioLabel={labelOfScenario(scenario)}
+          curveLabel={collateral.curve_label}
+          curveSourceName={collateral.curve_source_name}
+          curveSourceUrl={collateral.curve_source_url}
+        />
+
+        <ContextPanel factors={context} />
+      </div>
     </section>
   );
 }

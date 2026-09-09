@@ -95,6 +95,55 @@ colour at zoom 6, captured 2026-09-07, committed under `public/cache/tiles/`. NA
 imagery is in the public domain. The strip renders from the committed file, so it works
 with the interface disabled.
 
+**Per-property thumbnails.** 200 files, one per collateral pin, committed under
+`public/cache/thumbs/` and listed in `data/frozen/satellite_thumbs.csv` with the layer,
+capture date and measured luminance of each. Public domain, as above.
+
+The source is chosen per property by a **layer ladder, finest first**, and the first rung
+that yields a usable scene wins:
+
+| Rung | Layer | Zoom | Ground resolution | Tile span |
+|---|---|---|---|---|
+| 1 | HLS Sentinel-2 (`HLS_S30_Nadir_BRDF_Adjusted_Reflectance`) | 12 | ~30 m | ~9.8 km |
+| 2 | HLS Landsat (`HLS_L30_Nadir_BRDF_Adjusted_Reflectance`) | 12 | ~30 m | ~9.8 km |
+| 3 | MODIS Terra true colour | 8 | ~250 m | ~156 km |
+
+Both HLS products are served by GIBS over WMTS with **no token and no key**, which was the
+open question when this was built. On the 2026-09-09 run **all 200 pins resolved on rung 1**,
+so MODIS was never needed. They are sparse in time rather than daily, because they are real
+satellite passes, so the fetcher steps the capture date back up to 14 days per rung.
+
+**Fidelity, stated because it is visible.** 200 pins resolve to **33 distinct images**, and
+the most-shared covers **26 pins, 13% of the book**. Neighbouring properties in the same
+district share a picture; properties in different districts do not. Each pin still gets its
+own FILE, named for its collateral id, so a refresh moves one property without touching
+another's. Setting `GOOGLE_MAPS_STATIC_KEY` and rerunning `npm run prep:thumbs` switches the
+source to Google Maps Static at the property's own coordinates, which is a genuinely
+per-property image; no code changes.
+
+**Three ways an image can be blank, and all three are rejected.** This is worth recording
+because the first version of the pipeline caught none of them and shipped a black square onto
+the case screen the demo opens first.
+
+| Failure | How it reads | Where it was found |
+|---|---|---|
+| Blank black | mean luminance 0.0 | MODIS z8/x201/y127 on 2026-09-08, shared by all 60 Singapore and 8 Johor Bahru pins including the fixture `SG-EC-001` |
+| Blank white | mean luminance 251-255, fully opaque | total cloud over the Pearl River Delta |
+| No data | 0% opaque, becomes pure white when composited | HLS tiles outside the satellite swath, north Jakarta |
+
+Real imagery measured **48.7 to 242.9 mean luminance at 99.8% coverage or better**, so the
+thresholds (floor 12, ceiling 245, coverage 90%) sit in wide gaps rather than on boundaries.
+A tile failing any of the three is treated exactly like a missing one: step back a day, and
+drop a rung when the days run out. The same three checks run in `/api/refresh/thumbs`, so a
+live refresh cannot replace a good image with a blank one.
+
+**Two notes on the mechanics.** GIBS serves the HLS layers as **PNG** despite the `.jpg` in
+the WMTS path, at about 158 kB per tile, so every accepted tile is re-encoded as a 256x256 RGB
+JPEG at quality 82, which is what makes 200 committed thumbnails 3.6 MB rather than 30 MB.
+And the MODIS zoom was measured rather than read off the layer name: the matrix set is called
+`GoogleMapsCompatible_Level9`, which suggests zoom 9 and does not deliver it, returning 12 of
+14 tiles there against 13 of 13 at zoom 8.
+
 **Basemap.** [Protomaps](https://protomaps.com/) basemap built from OpenStreetMap data,
 **ODbL**, attribution rendered on the map. Three `.pmtiles` archives, all cut with
 `go-pmtiles` v1.22.0.
@@ -285,6 +334,19 @@ a non-zero weight means a geophysical event moves a number the dashboard labels 
 risk. That is deliberate: the AI Dashboard's score is a triage signal about regional
 pressure on a book, not an attribution claim, and the weight is the lowest of the six.
 
+Two limits on how far that reaches, both worth stating before anyone asks.
+
+**An earthquake can never enter a haircut.** The event weight lives only in the
+reference index's event-pressure term. The valuation engine reads `hazard_samples`, and
+the hazard enum has no member for seismic activity at all, so there is no path by which
+an earthquake changes a collateral value, an LTV or a loan condition. The separation is
+structural rather than a rule someone remembered to write.
+
+**On the seeded data the effect is nil.** One earthquake is seeded, off Flores in East
+Nusa Tenggara on 2026-08-05. Events attach to the nearest hotspot within 400 km and it
+attaches to none, so its weight multiplies nothing. It still renders on the news list,
+which is the correct reading: it happened, and it moved no number.
+
 ## 12. The hotspot score is the one LLM-assigned number
 
 The displayed hotspot score is assigned by the model through structured output. A
@@ -293,9 +355,49 @@ prompt**, so the model has no anchor. Divergence beyond 25 points raises a badge
 unreachable API, a missing tool block or a failed validation renders the reference
 instead with a fallback badge. No haircut, LTV or loan condition is model-assigned.
 
-**Observed divergence rate: to be recorded after the Day-4 pre-generation run.**
-Rubric tightening is time-boxed to 45 minutes, after which the observed rate is accepted
-and reported as-is.
+The model is **`claude-opus-5`** through the Anthropic SDK **0.124.0**, called with
+`tool_choice` forcing `assign_hotspot_score`, an **8 second timeout and one retry**.
+
+### The calibration scale, verbatim
+
+Reproduced from `CALIBRATION_RUBRIC` in `lib/index/llm-score.ts`, because plan 4.5 asks
+for the scale a reader can check a score against rather than a description of it:
+
+```
+1-20 minimal: little modelled hazard at 2050, a small share of the book, and no recent events.
+21-40 low: modest hazard or a modest share, and at most isolated recent events.
+41-60 moderate: clear hazard at 2050 or a material share of the book, with some recent event pressure.
+61-80 elevated: high hazard at 2050 together with a material share, or sustained recent event pressure.
+81-100 severe: hazard at or near the total cap, a leading share of the book, and repeated recent events.
+```
+
+### Nothing on this build is model-written, and that is the tested state
+
+**There is no measured divergence rate, and that is a statement about this build rather
+than a missing number.** No `ANTHROPIC_API_KEY` exists here, so every LLM path took its
+fallback, and both fallbacks are asserted rather than assumed:
+
+| Path | With no key | Rows |
+|---|---|---|
+| `npm run prep:scores` | the deterministic reference index renders with a **fallback badge**, and no model score is stored | all **16** hotspots |
+| `npm run prep:narratives` | the **rule text** is stored, with `fallback_used = true` | all **21** narratives |
+
+So a divergence rate needs two numbers to differ and only one of them exists. What the
+build does prove is the failure path, which is the half a demo is more likely to need: the
+fallback is the tested state, not an untried branch, and the offline suite asserts the
+score half of it end to end. Rubric tightening was time-boxed to 45 minutes against a live
+key; unspent, because the key never arrived.
+
+If a key is supplied before the demo, rerun both prep steps and re-record the divergence
+rate here. Nothing else changes: no haircut, LTV or loan condition is model-assigned in
+either state.
+
+### The reference index on the seeded data
+
+The deterministic index runs **7 to 64** across the sixteen hotspots. The floor is
+Woodlands and Bukit Timah, inland Singapore with little coastal exposure; the ceiling is
+Pudong and Lujiazui. **11 events attach across 7 hotspots** at the 400 km radius, so nine
+hotspots carry no event pressure at all and are ranked on hazard and exposure alone.
 
 ## 13. The borrowed heat elasticity
 
@@ -326,22 +428,130 @@ they need a citation to a named study with a year, and this section should recor
 <!-- BEGIN worker-c: Synthetic data calibration -->
 ## Synthetic data calibration
 
-**This section is missing and needs restoring by worker C.** I overwrote it on
-2026-09-08 by rewriting this whole file rather than editing around the section, which
-was my error. The delimiters above and below are here so it has a home to come back to,
-and nothing else in this file belongs to worker C.
+`prep/lib/synthetic.py` is a physical stand-in, not a dataset. It writes the hazard floor
+that every acceptance test runs against when `--source=synthetic` is passed, and every
+number in it is judgemental. It claims the same ADR-2 exemption `prep/lib/context.py`
+claims, on the same grounds: it never runs in the same pass as a real sample, it is
+pinned by `MASTER_SEED = 20260907`, and its output is committed to `data/synthetic/` and
+diffed like code. Nothing here is a published figure and nothing here may be cited as one.
 
-What it recorded, from the note in the team task list: the calibration of the synthetic
-hazard floor, and the resulting 2050 band distribution of **green 74 / amber 61 /
-orange 51 / red 14**, amber-or-worse **63%** by count.
+### What was calibrated for, and why
 
-Two figures measured from the seeded database on 2026-09-08 for cross-reference, which
-do **not** replace worker C's account of how the calibration was chosen:
+The generator was not tuned to reproduce any external distribution. It was tuned to make
+the map **discriminate**, because a map on which every pin is the same colour tests
+nothing and shows nothing:
 
-- 2050 bands by count: green 73, amber 62, orange 52, red 13, which matches the
-  end-to-end browser check recorded in plan section 10.
-- Amber-or-worse **by collateral value**, which is what AC-6 reports and is a different
-  measure from the count: **66.01%**, S$1,581,830,000 of S$2,396,510,000.
+1. **A green floor must survive to 2050.** A cool, green, high-ground pin with no flood
+   exposure has to stay under the 3% band edge at 2050. On the plan's own heat elasticity
+   an untuned floor put all 200 pins at amber-or-worse at 2050, which collapses AC-6's
+   amber-or-worse share to 100% and stops the slider saying anything at the one position
+   the demo dwells on.
+2. **All four bands must be occupied at 2050,** with red confined to the lowest coastal
+   clusters rather than sprayed across the book.
+3. **Origination must not already be alarming.** 2025 is the baseline the case screens
+   argue away from.
+4. **Every colour change must have a mechanism behind it** that survives being asked
+   about: elevation, distance to shore, latitude, cluster heat and greenness. Not noise.
+
+The target for (2) was roughly 30-40% green, 30-35% amber, 20-25% orange and 5-10% red at
+2050, giving an amber-or-worse share near 60% **by pin count**.
+
+### The seven pinned constants
+
+Each was chosen by measuring the resulting distribution, not by feel. The comment beside
+each in `prep/lib/synthetic.py` records the reasoning; this is the summary.
+
+| Constant | Value | Why this value |
+|---|---|---|
+| `COASTAL_LEVEL_M` | today 4.40, 2030 4.95, 2050 5.50 m | 100-year still-water level. The three are close together on purpose: the surge dominates and is nearly scenario-invariant, so only the sea-level increment separates them |
+| `COASTAL_ELEVATION_GAMMA` | 2.0 | Depth falls off faster than linearly with ground height. A linear head left the entire 2-6 m elevation band in one undifferentiated orange mass |
+| `COASTAL_ATTENUATION_KM` | 2.0 | A pin 2 km inland sees 1/e of the level. Gives the shoreline strip its own band without flooding the second row of clusters |
+| `RIVERINE_LEVEL_M` | today 1.52, 2030 1.71, 2050 1.90 m | 100-year riverine/pluvial depth scale before terrain |
+| `RIVERINE_FULL_BELOW_M` / `RIVERINE_ZERO_ABOVE_M` | 1.0 / 5.5 m | A terrain ramp, not an exponential decay. An `exp(-z/20)` decay left a measurable depth on a 60 m ridge, which pushed every inland pin over the 3% edge at 2050 |
+| `HEAT_2050_BY_ABS_LAT` | peaks at 54 days/yr near 22 deg | Days above 35 C at 2050 against the 2016-2035 reference. Peaks in the outer tropics, where the seasonal maximum already sits near the threshold, and falls away at the equator and in the subtropics. This is the constant that buys requirement (1) |
+| `HEAT_2030_FRACTION` | 0.30 | See below |
+| `WIND_TODAY_BY_ABS_LAT` / `WIND_SCENARIO_FACTOR` | peak 57 m/s near 22 deg; x1.00 / x1.02 / x1.05 | Anchored on the plan's "Hong Kong 100-year winds near 50-60 m/s". Only inside the North West Pacific basin rectangle, which is why SG, peninsular MY and ID read `absent` rather than zero |
+
+### `HEAT_2030_FRACTION = 0.30`
+
+The 2030 heat delta is taken as 0.30 of the 2050 delta. This is a **window-overlap
+argument, not a tuning knob**. The 2021-2040 window and the 2016-2035 reference window
+overlap by 15 of their 20 years and their centres are only 5 years apart, against 24 years
+for the 2040-2059 window. Threshold exceedance is convex in warming, which argues for a
+smaller fraction still, so 0.30 is already the generous end of what the window spacing
+supports.
+
+Raising it to 0.55 would fill out the 2030 column and lift the 2030 revaluation count from
+3 to 14, which reads better on stage. It was not raised. The NEX-GDDP window spacing does
+not support it, and a figure chosen because it demos well is exactly the figure that does
+not survive a question. The lead accepted the count of 3 and amended S17 instead; see plan
+section 10.
+
+### Resulting band distribution
+
+Measured on 2026-09-08 from a freshly migrated, seeded and recomputed database against the
+seeded active rule set, 200 pins, 600 valuations.
+
+**2025 (origination).** Grouped by country, pin counts:
+
+| Country | Green | Amber | Orange | Red | Total |
+|---|---|---|---|---|---|
+| SG | 60 | 0 | 0 | 0 | 60 |
+| MY | 40 | 0 | 0 | 0 | 40 |
+| ID | 40 | 0 | 0 | 0 | 40 |
+| CN | 0 | 35 | 0 | 0 | 35 |
+| HK | 0 | 25 | 0 | 0 | 25 |
+| **All** | **140** | **60** | **0** | **0** | **200** |
+
+The CN/HK block is amber at origination and everything else is green. That is the wind
+term: those are the only two markets inside the North West Pacific basin rectangle, so
+they are the only ones carrying a wind haircut before any horizon effect exists.
+
+**2030.**
+
+| Country | Green | Amber | Orange | Red | Total |
+|---|---|---|---|---|---|
+| SG | 57 | 3 | 0 | 0 | 60 |
+| MY | 39 | 1 | 0 | 0 | 40 |
+| ID | 26 | 14 | 0 | 0 | 40 |
+| CN | 0 | 32 | 3 | 0 | 35 |
+| HK | 0 | 25 | 0 | 0 | 25 |
+| **All** | **122** | **75** | **3** | **0** | **200** |
+
+Only three pins reach orange by 2030, all Chinese. This is arithmetic rather than
+calibration: SG, MY and ID cap at 5% water plus 5% chronic at 2030, which ties `band_mid`
+and never exceeds it, so only the 6% wind band can carry a pin past it.
+
+**2050.**
+
+| Country | Green | Amber | Orange | Red | Total |
+|---|---|---|---|---|---|
+| SG | 30 | 19 | 11 | 0 | 60 |
+| MY | 32 | 3 | 5 | 0 | 40 |
+| ID | 11 | 10 | 11 | 8 | 40 |
+| CN | 0 | 17 | 13 | 5 | 35 |
+| HK | 0 | 13 | 12 | 0 | 25 |
+| **All** | **73** | **62** | **52** | **13** | **200** |
+
+Against the target of roughly 30-40 / 30-35 / 20-25 / 5-10 per cent, the seeded floor
+gives 36.5 / 31.0 / 26.0 / 6.5. Red is confined to the lowest coastal clusters, eight in
+Indonesia and five in China, and touches no fixture.
+
+### The two amber-or-worse figures are different measures
+
+They are quoted for different purposes and must not be swapped:
+
+- **63% amber-or-worse at 2050 by pin count** (127 of 200). This is the calibration
+  target above. It is a property of the synthetic floor.
+- **66.01% amber-or-worse at 2050 by collateral value**, S$1,581,830,000 of
+  S$2,396,510,000. This is the AC-6 dashboard figure and the number to use in the pitch.
+  It is higher than the count figure because the affected pins are on average the more
+  valuable ones, which is a real portfolio effect and worth saying out loud rather than
+  glossing.
+
+An end-to-end check in the browser against the rendered map agreed with the database
+counts **within one pin per band**, the difference being pins outside the viewport at the
+opening zoom rather than any disagreement about the data.
 
 <!-- END worker-c: Synthetic data calibration -->
 

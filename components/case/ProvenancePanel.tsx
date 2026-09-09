@@ -59,15 +59,15 @@ export function ProvenancePanel({
   return (
     <section
       data-testid="provenance-panel"
-      className="rounded-lg border border-black/10 dark:border-white/15"
+      className="panel avoid-break"
     >
-      <header className="flex flex-wrap items-baseline justify-between gap-2 border-b border-black/10 px-4 py-2.5 dark:border-white/15">
+      <header className="flex flex-wrap items-baseline justify-between gap-2 border-b border-rule px-4 py-2.5 dark:border-rule">
         <h2 className="text-sm font-semibold">Provenance</h2>
         <span className="text-xs opacity-60">Scenario: {scenarioLabel}</span>
       </header>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[44rem] text-xs">
+        <table className="data-table min-w-[44rem]">
           <thead>
             <tr className="text-left opacity-60">
               <th scope="col" className="px-4 py-1.5 font-medium">Factor</th>
@@ -125,7 +125,7 @@ export function ProvenancePanel({
             {modifiers ? (
               <tr
                 data-testid="provenance-row-modifiers"
-                className="border-t border-black/5 dark:border-white/10"
+                className="border-t border-rule"
               >
                 <th scope="row" className="px-4 py-2 text-left font-normal">
                   Site modifiers
@@ -143,7 +143,7 @@ export function ProvenancePanel({
             {curveLabel ? (
               <tr
                 data-testid="provenance-row-curve"
-                className="border-t border-black/5 dark:border-white/10"
+                className="border-t border-rule"
               >
                 <th scope="row" className="px-4 py-2 text-left font-normal">
                   Depth-damage curve
@@ -168,7 +168,7 @@ export function ProvenancePanel({
       </div>
 
       {floodSuppressed ? (
-        <p data-testid="no-flood-line" className="border-t border-black/10 px-4 py-2 text-xs opacity-70 dark:border-white/15">
+        <p data-testid="no-flood-line" className="border-t border-rule px-4 py-2 text-xs opacity-70 dark:border-rule">
           No flood row at this scenario: neither water peril contributes, so there
           is no winning peril and no depth to attribute. At the 2025 origination
           position the horizon probability is zero, so this is expected.

@@ -1,26 +1,337 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+  S27, the bank-grade visual pass.
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "Cascadia Mono", Consolas, monospace;
+  Three rules govern everything below.
+
+  ONE FONT DECISION, AND IT IS NOT TO SHIP A FONT. No `next/font/google`, no
+  `@font-face`, no `@import url(...)`. Every one of those fetches a file, at
+  build time or at render time, and the Day-5 rehearsal rebuilds and runs with
+  the host interface disabled (plan 4.9, AC-11). The stack below is the native
+  UI face of each platform, which is what a bank's internal tooling looks like
+  anyway: Segoe UI Variable on the demo machine, SF on a Mac, Roboto elsewhere.
+  It costs nothing and it cannot fail offline.
+
+  ONE PALETTE, EXPRESSED AS TOKENS. A deep red accent against neutral greys.
+  The accent is used for identity and for emphasis, never to encode risk: the
+  four band colours are the `risk_band` enum's own and are defined in
+  `components/map/PortfolioMap.tsx` so a pin's colour and its case band are one
+  value rather than two kept in step (AC-5). Nothing here may restate them.
+
+  ONE TABLE STYLE. `.data-table` is the credit-file look: dense rows, hairline
+  rules, a quiet uppercase header, tabular numerals so columns of money line up
+  digit for digit. Applied by class rather than by element so a layout table,
+  should one ever appear, is unaffected.
+*/
+
+:root {
+  color-scheme: light;
+
+  /* Surfaces, coolest to warmest. */
+  --background: #f6f6f7;
+  --surface: #ffffff;
+  --surface-sunken: #f0f0f2;
+  --foreground: #14161a;
+  --muted: #5a606b;
+  --faint: #8a909b;
+
+  /* Hairlines. Two weights: one to separate rows, one to bound a panel. */
+  --rule: #e2e3e7;
+  --rule-strong: #cdcfd6;
+
+  /*
+    The accent. A deep red in the OCBC register, dark enough to carry white
+    text at the 4.5:1 contrast a bank screen has to meet, which the brighter
+    consumer red does not.
+  */
+  --accent: #b3111c;
+  --accent-strong: #8c0d16;
+  --accent-tint: #fdf2f3;
+  --accent-contrast: #ffffff;
+
+  /* The illustrative-data ribbon. Warm, quiet, and never mistaken for a band. */
+  --caution-bg: #fdf3d7;
+  --caution-fg: #6b4f05;
+  --caution-rule: #e8d49a;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color-scheme: dark;
+
+    --background: #0d0e11;
+    --surface: #16181d;
+    --surface-sunken: #101216;
+    --foreground: #e9eaee;
+    --muted: #a2a8b4;
+    --faint: #767d8a;
+
+    --rule: #262930;
+    --rule-strong: #363a44;
+
+    --accent: #f0555f;
+    --accent-strong: #ff7a83;
+    --accent-tint: #241416;
+    --accent-contrast: #14161a;
+
+    --caution-bg: #2a2208;
+    --caution-fg: #e8cf86;
+    --caution-rule: #4a3d12;
   }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-tint: var(--accent-tint);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-caution-bg: var(--caution-bg);
+  --color-caution-fg: var(--caution-fg);
+  --color-caution-rule: var(--caution-rule);
+
+  /*
+    Native UI faces only. `ui-sans-serif` and `system-ui` resolve to the
+    platform face; the named fallbacks cover older engines. Nothing is fetched.
+  */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI Variable Text",
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "Cascadia Mono", "Segoe UI Mono",
+    Consolas, "Liberation Mono", monospace;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  /* Tabular figures everywhere by default: this application is mostly money. */
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Money and counts stay tabular even inside prose that resets the body rule. */
+.tabular-nums,
+td,
+th {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------------ */
+/* Surfaces                                                                  */
+/* ------------------------------------------------------------------------ */
+
+/*
+  A panel: the bounded card every screen is built from. One border weight and
+  no shadow, because a shadow reads as a consumer app and this is a credit file.
+*/
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+}
+
+.panel-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.875rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------------ */
+/* Dense tables                                                              */
+/* ------------------------------------------------------------------------ */
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+.data-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface-sunken);
+  padding: 0.375rem 0.625rem;
+  text-align: left;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule-strong);
+  white-space: nowrap;
+}
+
+/*
+  `tbody th` is here beside `tbody td` because several panels use a row header
+  (`<th scope="row">`) for the factor name, which is the correct markup and
+  would otherwise miss every rule below and sit a row out of alignment.
+*/
+.data-table tbody td,
+.data-table tbody th {
+  padding: 0.3125rem 0.625rem;
+  border-top: 1px solid var(--rule);
+  vertical-align: top;
+}
+
+.data-table tbody th[scope="row"] {
+  text-align: left;
+  font-weight: 400;
+  color: var(--foreground);
+}
+
+.data-table tbody tr:first-child td,
+.data-table tbody tr:first-child th {
+  border-top: 0;
+}
+
+.data-table tbody tr:hover td,
+.data-table tbody tr:hover th {
+  background: var(--surface-sunken);
+}
+
+/* A numeric column. Right-aligned, and it must never wrap mid-figure. */
+.data-table .num,
+.data-table th.num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* A totals or subtotal row reads as the bottom rule of the block above it. */
+.data-table tbody tr.total td {
+  border-top: 1px solid var(--rule-strong);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------------ */
+/* Print: the case screen is the page a credit committee takes into a room    */
+/* ------------------------------------------------------------------------ */
+
+@media print {
+  /*
+    Print in black on white regardless of the viewer's colour scheme. A screen
+    in dark mode otherwise prints a solid dark page, which wastes toner and is
+    unreadable, and `color-scheme` alone does not stop it.
+  */
+  :root {
+    color-scheme: light !important;
+    --background: #ffffff;
+    --surface: #ffffff;
+    --surface-sunken: #ffffff;
+    --foreground: #000000;
+    --muted: #333333;
+    --faint: #555555;
+    --rule: #bbbbbb;
+    --rule-strong: #666666;
+    --accent: #8c0d16;
+    --accent-strong: #8c0d16;
+    --accent-tint: #ffffff;
+    --caution-bg: #ffffff;
+    --caution-fg: #000000;
+    --caution-rule: #666666;
+  }
+
+  @page {
+    size: A4;
+    margin: 14mm 12mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 9.5pt;
+  }
+
+  /* Anything the reader cannot act on from paper. */
+  .print-hide {
+    display: none !important;
+  }
+
+  /* The provenance line, the sign-off block: paper only. */
+  .print-only {
+    display: block !important;
+  }
+
+  /*
+    A panel must not be split across a page break where it can be helped.
+    `break-inside` is the standard property; the WebKit alias is kept because
+    the demo may be printed from Safari.
+  */
+  .panel,
+  .avoid-break {
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    border-color: #999999;
+    border-radius: 0;
+  }
+
+  .data-table {
+    font-size: 8.5pt;
+  }
+
+  .data-table thead th {
+    position: static;
+    background: #ffffff;
+    border-bottom: 1px solid #000000;
+  }
+
+  /* A table that runs over a page repeats its header on the next one. */
+  .data-table thead {
+    display: table-header-group;
+  }
+
+  .data-table tbody tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .data-table tbody tr:hover td {
+    background: transparent;
+  }
+
+  /*
+    A printed link is a dead end unless its target is on the page. Provenance
+    URLs are the whole point of AC-12, so they print in full beside the text.
+    Only inside a marked region: printing every href in the navigation would
+    bury the document.
+  */
+  .print-urls a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 7.5pt;
+    color: #333333;
+    word-break: break-all;
+  }
+
+  /* Nothing scrolls on paper. */
+  .overflow-x-auto,
+  .overflow-y-auto,
+  .overflow-auto {
+    overflow: visible !important;
+    max-height: none !important;
+  }
+}
+
+/* `.print-only` is paper-only; the rule above turns it on. */
+.print-only {
+  display: none;
 }

@@ -68,6 +68,18 @@ describe('an override reaches every outbound URL', () => {
     expect(captureDateOf(moved!)).toBe('2026-09-08');
   });
 
+  it('treats an EMPTY value as unset, because .env.example ships them blank', () => {
+    // `'' ?? default` keeps the empty string, so a developer who copied
+    // .env.example would get every outbound URL starting at `/api/...`, failing
+    // in a way that looks like a bug in the route rather than a blank config line.
+    process.env.FEED_EONET_BASE = '';
+    expect(eonetBase()).toBe('https://eonet.gsfc.nasa.gov');
+    expect(anyBaseOverridden()).toBe(false);
+
+    process.env.FEED_EONET_BASE = '   ';
+    expect(eonetBase()).toBe('https://eonet.gsfc.nasa.gov');
+  });
+
   it('tolerates a trailing slash on the configured base', () => {
     process.env.FEED_EONET_BASE = 'http://127.0.0.1:9/';
     expect(eonetBase()).toBe('http://127.0.0.1:9');

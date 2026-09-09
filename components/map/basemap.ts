@@ -53,6 +53,23 @@ export const CITIES_MIN_ZOOM = 11;
 
 const THEME = 'light';
 
+/**
+ * The colour outside the archives (S27).
+ *
+ * The extracts cover 95E-125E and 11S-33N and nothing else, and the opening
+ * view is fitted to that box. On a wide, short viewport the fit is bound by
+ * LATITUDE: fitting 44 degrees of it into a 1280x567 frame leaves the width
+ * spanning about 110 degrees of longitude, of which only 30 carry data. That is
+ * geometry rather than a bug, and `maxBounds` is not the answer, for the reason
+ * recorded beside `ARCHIVE_BOUNDS` in `PortfolioMap.tsx`.
+ *
+ * What CAN be fixed is how the margin reads. The theme's own background is a
+ * pale land colour, so the empty margin looked like unpainted land and
+ * therefore like a failed tile load. A neutral slate reads as inert chrome, and
+ * the extract now sits on the page as a distinct object.
+ */
+const OUT_OF_EXTRACT = '#dcdee3';
+
 const EMPTY_FEATURE_COLLECTION = {
   type: 'FeatureCollection' as const,
   features: [] as never[],
@@ -72,6 +89,10 @@ function themeLayers(
     if (layer.type === 'background' && !options.keepBackground) continue;
 
     const next = { ...layer, id: `${source}:${layer.id}` } as LayerSpecification;
+
+    if (next.type === 'background') {
+      next.paint = { ...next.paint, 'background-color': OUT_OF_EXTRACT };
+    }
 
     // A background layer has no source and no tile zoom range to respect.
     if (layer.type !== 'background') {
@@ -118,7 +139,7 @@ export function buildMapStyle(available: BasemapAvailability): StyleSpecificatio
     layers.push({
       id: 'region:background',
       type: 'background',
-      paint: { 'background-color': '#e9eae4' },
+      paint: { 'background-color': OUT_OF_EXTRACT },
     });
   }
 

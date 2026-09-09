@@ -25,7 +25,7 @@ venv/
 # Raw downloads (STORM basins, LHASA, DEM). Only the 200 sampled values are committed.
 data/raw/
 # Local PGlite data directory.
-data/pglite/
+data/pglite*/
 # Downloaded go-pmtiles binary.
 .cache/
 

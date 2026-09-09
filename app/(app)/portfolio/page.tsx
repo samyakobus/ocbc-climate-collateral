@@ -75,7 +75,7 @@ function Tile({
   testId: string;
 }) {
   return (
-    <div className="flex flex-col gap-1 rounded border border-black/10 p-4 dark:border-white/15">
+    <div className="flex flex-col gap-1 rounded border border-rule p-4 dark:border-rule">
       <span className="text-xs uppercase tracking-wide opacity-60">{label}</span>
       <span data-testid={testId} title={title} className="text-2xl font-semibold tabular-nums">
         {value}
@@ -95,10 +95,10 @@ function ScenarioTabs({ active }: { active: Scenario }) {
           data-testid={`scenario-${s.key}`}
           aria-current={s.key === active ? 'page' : undefined}
           className={
-            'rounded px-3 py-1 text-sm ' +
+            'rounded px-3 py-1 text-sm transition-colors ' +
             (s.key === active
-              ? 'bg-black text-white dark:bg-white dark:text-black'
-              : 'border border-black/15 dark:border-white/20')
+              ? 'bg-accent font-medium text-accent-contrast'
+              : 'border border-rule-strong text-muted hover:border-accent hover:text-accent')
           }
         >
           {s.label}
@@ -110,33 +110,27 @@ function ScenarioTabs({ active }: { active: Scenario }) {
 
 function CountryTable({ rows }: { rows: PortfolioSummaryRow[] }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[36rem] text-sm" data-testid="country-table">
-        <thead className="text-left text-xs uppercase tracking-wide opacity-60">
+    <div className="panel overflow-x-auto">
+      <table className="data-table min-w-[36rem]" data-testid="country-table">
+        <thead>
           <tr>
-            <th className="py-2 pr-4">Country</th>
-            <th className="py-2 pr-4 text-right">Pins</th>
-            <th className="py-2 pr-4 text-right">Collateral value</th>
-            <th className="py-2 pr-4 text-right">Amber or worse</th>
-            <th className="py-2 pr-4 text-right">Share</th>
-            <th className="py-2 text-right">Haircut</th>
+            <th>Country</th>
+            <th className="num">Pins</th>
+            <th className="num">Collateral value</th>
+            <th className="num">Amber or worse</th>
+            <th className="num">Share</th>
+            <th className="num">Haircut</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.country} className="border-t border-black/10 dark:border-white/15">
-              <td className="py-2 pr-4 font-medium">{row.country.trim()}</td>
-              <td className="py-2 pr-4 text-right tabular-nums">{row.collateral_count}</td>
-              <td className="py-2 pr-4 text-right tabular-nums">
-                {compactSgd(row.collateral_value_sgd)}
-              </td>
-              <td className="py-2 pr-4 text-right tabular-nums">
-                {compactSgd(row.value_amber_or_worse_sgd)}
-              </td>
-              <td className="py-2 pr-4 text-right tabular-nums">
-                {pct.format(row.share_amber_or_worse ?? 0)}
-              </td>
-              <td className="py-2 text-right tabular-nums">{compactSgd(row.total_haircut_sgd)}</td>
+            <tr key={row.country}>
+              <td className="font-medium">{row.country.trim()}</td>
+              <td className="num">{row.collateral_count}</td>
+              <td className="num">{compactSgd(row.collateral_value_sgd)}</td>
+              <td className="num">{compactSgd(row.value_amber_or_worse_sgd)}</td>
+              <td className="num">{pct.format(row.share_amber_or_worse ?? 0)}</td>
+              <td className="num">{compactSgd(row.total_haircut_sgd)}</td>
             </tr>
           ))}
         </tbody>
@@ -147,51 +141,41 @@ function CountryTable({ rows }: { rows: PortfolioSummaryRow[] }) {
 
 function TopCases({ cases }: { cases: TopExposedCase[] }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[42rem] text-sm" data-testid="top-exposed">
-        <thead className="text-left text-xs uppercase tracking-wide opacity-60">
+    <div className="panel overflow-x-auto">
+      <table className="data-table min-w-[42rem]" data-testid="top-exposed">
+        <thead>
           <tr>
-            <th className="py-2 pr-4">Case</th>
-            <th className="py-2 pr-4">Address</th>
-            <th className="py-2 pr-4 text-right">Appraised</th>
-            <th className="py-2 pr-4 text-right">Adjusted</th>
-            <th className="py-2 pr-4 text-right">Haircut</th>
-            <th className="py-2 text-right">Band</th>
+            <th>Case</th>
+            <th>Address</th>
+            <th className="num">Appraised</th>
+            <th className="num">Adjusted</th>
+            <th className="num">Haircut</th>
+            <th className="num">Band</th>
           </tr>
         </thead>
         <tbody>
           {cases.map((row) => (
-            <tr
-              key={row.collateral_id}
-              className="border-t border-black/10 dark:border-white/15"
-              data-testid={`top-case-${row.collateral_id}`}
-            >
-              <td className="py-2 pr-4">
+            <tr key={row.collateral_id} data-testid={`top-case-${row.collateral_id}`}>
+              <td>
                 <Link
-                  className="underline underline-offset-4"
+                  className="font-medium underline-offset-2 hover:text-accent hover:underline"
                   href={`/cases/${row.collateral_id}`}
                 >
                   {row.collateral_id}
                 </Link>
               </td>
-              <td className="py-2 pr-4">
+              <td>
                 {row.address_line}
-                <span className="opacity-50"> · {row.country}</span>
+                <span className="text-faint"> · {row.country}</span>
               </td>
-              <td className="py-2 pr-4 text-right tabular-nums">
-                {compactSgd(row.appraised_value_sgd)}
-              </td>
-              <td className="py-2 pr-4 text-right tabular-nums">
-                {compactSgd(row.adjusted_value_sgd)}
-              </td>
-              <td className="py-2 pr-4 text-right tabular-nums" title={sgd.format(row.haircut_sgd)}>
+              <td className="num">{compactSgd(row.appraised_value_sgd)}</td>
+              <td className="num">{compactSgd(row.adjusted_value_sgd)}</td>
+              <td className="num" title={sgd.format(row.haircut_sgd)}>
                 {compactSgd(row.haircut_sgd)}{' '}
-                <span className="opacity-50">({pct.format(row.total_haircut)})</span>
+                <span className="text-faint">({pct.format(row.total_haircut)})</span>
               </td>
-              <td className="py-2 text-right">
-                <span
-                  className={`rounded px-2 py-0.5 text-xs ${BAND_STYLE[row.band] ?? ''}`}
-                >
+              <td className="num">
+                <span className={`rounded px-1.5 py-0.5 text-[11px] ${BAND_STYLE[row.band] ?? ''}`}>
                   {row.band}
                 </span>
               </td>

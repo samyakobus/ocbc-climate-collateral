@@ -34,7 +34,7 @@ export function AdaptationToggle({ valuation, adaptation }: AdaptationToggleProp
     return (
       <section
         data-testid="adaptation-panel"
-        className="rounded-lg border border-black/10 px-4 py-3 text-sm dark:border-white/15"
+        className="panel avoid-break px-4 py-3 text-sm"
       >
         <h2 className="text-sm font-semibold">Adaptation</h2>
         <p className="mt-1 text-xs opacity-70">
@@ -54,9 +54,9 @@ export function AdaptationToggle({ valuation, adaptation }: AdaptationToggleProp
   return (
     <section
       data-testid="adaptation-panel"
-      className="rounded-lg border border-black/10 dark:border-white/15"
+      className="panel avoid-break"
     >
-      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-black/10 px-4 py-2.5 dark:border-white/15">
+      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-rule px-4 py-2.5 dark:border-rule">
         <h2 className="text-sm font-semibold">Adaptation</h2>
         <label className="flex items-center gap-2 text-xs">
           <input

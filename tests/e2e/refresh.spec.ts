@@ -6,30 +6,24 @@
  * It asserts that a GET is refused, that a POST answers with a body the UI can
  * toast, and that every committed tile the strip renders is served locally.
  *
- * The offline failure path is asserted too, but NOT by blocking in the browser.
- * Playwright's `page.route` intercepts requests the BROWSER makes; both refresh
- * routes call out from the SERVER, inside the Next request handler, so a
- * browser-level block never reaches them. I wrote that test first and it failed
- * by succeeding: the route sailed past the interception, reached NASA and
- * returned ok.
+ * THE OFFLINE HALF IS NOT IN THIS FILE, and that is deliberate.
  *
- * What works is making the SERVER offline. `lib/feeds/bases.ts` takes all three
- * outbound hosts from the environment, defaulting to the real ones, and
- * `playwright.config.ts` passes the environment through to the web server. So:
+ * It used to be, guarded by a `test.skip` on the three feed hosts, and it
+ * reported badly: a skipped test still LISTS, so every default run ended "39
+ * passed, 4 skipped" for ever, and a Skipped column that always reads 4 is one
+ * people stop reading. Those four tests now live in `offline.spec.ts`, which
+ * `playwright.config.ts` collects only when the hosts are overridden. The
+ * default project reports 0 skipped, so any skip in it is now a real signal.
  *
- *     FEED_EONET_BASE=http://127.0.0.1:9 FEED_GIBS_BASE=http://127.0.0.1:9  *       npx playwright test tests/e2e/refresh.spec.ts
- *
- * runs the app against a dead port and the offline block below asserts the
- * fallback. Without those variables the block skips, because asserting a
- * fallback against a live feed would assert nothing. S26's offline spec sets
- * them for a whole run.
+ * Why blocking in the browser cannot do it, recorded because it is easy to try:
+ * Playwright's `page.route` intercepts requests the BROWSER makes, and both
+ * refresh routes call out from the SERVER inside the Next handler. Written that
+ * way first, the test failed by succeeding, reaching NASA and returning ok.
  *
  * These specs use `request` through the page's context so the session cookie
  * comes along; the routes require a signed-in user.
  */
 
-import { readdirSync } from 'node:fs';
-import { resolve } from 'node:path';
 
 import { expect, test } from '@playwright/test';
 
@@ -73,69 +67,6 @@ test.describe('AC-16: the news refresh', () => {
 
 });
 
-/**
- * True when the web server was started with its outbound hosts pointed somewhere
- * dead. The specs below only mean something in that case.
- */
-const OFFLINE = Boolean(process.env.FEED_EONET_BASE ?? process.env.FEED_GIBS_BASE);
-
-test.describe('AC-11: a refresh with the server genuinely offline', () => {
-  test.skip(
-    !OFFLINE,
-    'set FEED_EONET_BASE and FEED_GIBS_BASE to a dead port to exercise the offline path',
-  );
-
-  test('the news refresh toasts and leaves every item in place', async ({ page }) => {
-    await login(page);
-
-    const before = await page.request.post('/api/refresh/news');
-    const beforeBody = (await before.json()) as RefreshBody;
-
-    // A dead port is a connection refused, not a 500, and the body says what is
-    // still on screen rather than only what failed.
-    expect(before.status()).toBe(200);
-    expect(beforeBody.ok).toBe(false);
-    expect(beforeBody.message).toMatch(/cached items/i);
-
-    // Nothing was written, so a second call reports identically.
-    const again = await page.request.post('/api/refresh/news');
-    expect(((await again.json()) as RefreshBody).message).toBe(beforeBody.message);
-  });
-
-  test('the tile refresh toasts and refreshes nothing', async ({ page }) => {
-    await login(page);
-
-    const response = await page.request.post('/api/refresh/tiles');
-    expect(response.status()).toBe(200);
-
-    const body = (await response.json()) as RefreshBody;
-    expect(body.ok).toBe(false);
-    expect(body.message).toMatch(/cached imagery/i);
-    expect(body.refreshed ?? 0).toBe(0);
-  });
-
-  test('every screen still renders, which is the point of the whole rule', async ({ page }) => {
-    await login(page);
-
-    for (const path of ['/ai', '/portfolio', '/cases', '/map', '/rules']) {
-      const response = await page.goto(path);
-      expect(response?.status(), `${path} status`).toBeLessThan(400);
-    }
-  });
-
-  test('the cached tiles still serve, so the strip is not blank', async ({ page }) => {
-    await login(page);
-
-    const dir = resolve(process.cwd(), 'public/cache/tiles');
-    const files = readdirSync(dir).filter((name) => name.endsWith('.jpg'));
-
-    for (const name of files.slice(0, 3)) {
-      const response = await page.request.get(`/cache/tiles/${name}`);
-      expect(response.status(), `/cache/tiles/${name}`).toBe(200);
-    }
-  });
-});
-
 test.describe('AC-14: the tile refresh', () => {
   test('rejects GET, because a render path may not call out', async ({ page }) => {
     await login(page);
@@ -159,22 +90,39 @@ test.describe('AC-14: the tile refresh', () => {
   test('serves every cached tile the strip points at, with no network at all', async ({ page }) => {
     await login(page);
 
-    // The strip renders from cached_path, and those files sit under public/.
-    // Requesting each one over HTTP proves the imagery is served by this app
-    // from disk, so the strip has nothing to fetch when the interface is down.
-    const dir = resolve(process.cwd(), 'public/cache/tiles');
-    const files = readdirSync(dir).filter((name) => name.endsWith('.jpg'));
-    expect(files.length, 'no cached tiles are committed').toBeGreaterThanOrEqual(12);
+    /*
+      THE STRIP, not the directory, and the difference is what this test used to
+      get wrong.
 
-    for (const name of files) {
-      const response = await page.request.get(`/cache/tiles/${name}`);
-      expect(response.status(), `/cache/tiles/${name}`).toBe(200);
+      It read `public/cache/tiles` and required every file in it to serve. That
+      punished the route for doing its job: a successful refresh writes a NEW
+      file under a content-hashed name, deliberately leaving the old one in
+      place, and `next start` serves the build-time snapshot of `public/`, so a
+      file written after the build 404s. One live refresh earlier in the same run
+      therefore turned a passing suite red, and the thing it reported was correct
+      behaviour.
+
+      Asking the rendered page which files it points at is both the assertion the
+      name promises and immune to extra files on disk.
+    */
+    await page.goto('/ai');
+    const sources = await page.locator('[data-testid^="tile-"] img').evaluateAll((nodes) =>
+      nodes.map((node) => (node as HTMLImageElement).getAttribute('src') ?? ''),
+    );
+
+    expect(sources.length, 'the strip rendered no tiles').toBeGreaterThanOrEqual(12);
+
+    for (const src of sources) {
+      expect(src, `${src} is not a local cached path`).toMatch(/^\/cache\/tiles\//);
+
+      const response = await page.request.get(src);
+      expect(response.status(), src).toBe(200);
 
       const body = await response.body();
-      expect(body.byteLength, `${name} is too small to be imagery`).toBeGreaterThan(512);
+      expect(body.byteLength, `${src} is too small to be imagery`).toBeGreaterThan(512);
       // JPEG magic. A 200 that returns an HTML error page would otherwise pass.
-      expect(body[0], `${name} is not a JPEG`).toBe(0xff);
-      expect(body[1], `${name} is not a JPEG`).toBe(0xd8);
+      expect(body[0], `${src} is not a JPEG`).toBe(0xff);
+      expect(body[1], `${src} is not a JPEG`).toBe(0xd8);
     }
   });
 });

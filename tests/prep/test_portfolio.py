@@ -309,3 +309,197 @@ def test_committed_csv_matches_a_fresh_run(rows):
         assert s["building_type"] == r["building_type"]
         assert s["segment"] == r["segment"]
         assert (s["adaptation_project_id"] or None) == r["adaptation_project_id"]
+
+
+# ---------------------------------------------------------------------------
+# The SQL emitter (#45)
+#
+# The emitter had been writing a NARROWER collateral INSERT than the file
+# committed at db/seed/03_portfolio.sql: it omitted `landslide_flag`,
+# `slope_deg` and `satellite_thumb_path` entirely. Running the CLI without
+# `--print-only` therefore overwrote the seed with a file that dropped the
+# landslide badge's data, and nothing said so.
+#
+# The two derived columns come from `prep/lib/context.py`, which is their single
+# definition, so these tests assert AGREEMENT with that module and with
+# `04_samples.sql`, which updates the same two columns from the same function.
+# Two writers for one column is tolerable only while they cannot disagree.
+# ---------------------------------------------------------------------------
+#: The value block stops at `ON CONFLICT`, not at the first semicolon.
+#:
+#: Every INSERT in this seed is an upsert (#46): `scripts/seed.ts` applies all
+#: five files on every `npm run db:seed`, so a plain INSERT fails on the second
+#: seed of the day and rolls back the file. Anchoring on the semicolon swept the
+#: `ON CONFLICT ... DO UPDATE SET` lines into the value block and every row
+#: parse then failed on a line that is not a tuple.
+COLLATERAL_INSERT = re.compile(
+    r"INSERT INTO collateral \(\n(?P<cols>.*?)\n\) VALUES\n(?P<vals>.*?)\nON CONFLICT", re.S)
+
+ROW_TAIL = re.compile(
+    r", (?P<flag>true|false), (?P<slope>NULL|[0-9.]+), (?P<thumb>NULL|'[^']*')\),?$")
+
+
+@pytest.fixture(scope="module")
+def emitted_sql(rows):
+    return gp.portfolio_sql(rows, gp.repo_root())
+
+
+@pytest.fixture(scope="module")
+def emitted_collateral(emitted_sql):
+    match = COLLATERAL_INSERT.search(emitted_sql)
+    assert match, "the emitter wrote no collateral INSERT"
+    out = {}
+    for line in match.group("vals").split("\n"):
+        line = line.strip()
+        if not line:
+            continue
+        cid = re.match(r"\('([^']+)'", line).group(1)
+        tail = ROW_TAIL.search(line)
+        assert tail, "row %s does not end with the three derived columns: %s" % (cid, line)
+        out[cid] = tail.groupdict()
+    return out
+
+
+def test_emitter_writes_the_three_derived_columns(emitted_sql):
+    cols = COLLATERAL_INSERT.search(emitted_sql).group("cols")
+    for column in ("landslide_flag", "slope_deg", "satellite_thumb_path"):
+        assert column in cols, "the collateral INSERT omits %s" % column
+
+
+def test_emitter_covers_every_pin(emitted_collateral, rows):
+    assert len(emitted_collateral) == len(rows) == 200
+
+
+def test_slope_and_flag_come_from_context_not_a_second_model(emitted_collateral, rows):
+    from prep.lib.context import derive_collateral_updates
+
+    expected = dict(
+        (str(u["collateral_id"]), u)
+        for u in derive_collateral_updates([
+            {"id": r["collateral_id"], "country": r["country"],
+             "elevation_m": r["elevation_m"]}
+            for r in rows
+        ])
+    )
+
+    assert set(expected) == set(emitted_collateral)
+    for cid, want in expected.items():
+        got = emitted_collateral[cid]
+        assert got["flag"] == ("true" if want["landslide_flag"] else "false"), cid
+        assert float(got["slope"]) == pytest.approx(float(want["slope_deg"])), cid
+
+
+def test_the_flag_population_is_the_documented_one(emitted_collateral):
+    """Ten pins, none in Singapore, no fixture. Worker A's S33 changelog row."""
+    flagged = sorted(c for c, v in emitted_collateral.items() if v["flag"] == "true")
+    assert len(flagged) == 10, flagged
+    assert not [c for c in flagged if c.startswith("SG-")], flagged
+    assert not set(flagged) & set(EXPECTED_FIXTURES), flagged
+
+
+def test_04_samples_no_longer_writes_slope_or_the_landslide_flag():
+    """One writer per column (#46), asserted by absence.
+
+    `04_samples.sql` used to UPDATE `slope_deg` and `landslide_flag` alongside
+    this emitter, back when the TypeScript stopgap wrote `03_portfolio.sql` and
+    could not derive them. Two writers agreeing was luck rather than
+    construction: both called `prep/lib/context.py`, but nothing made them, and
+    a change to one would have been invisible until a badge went wrong.
+
+    They are now written ONLY here. The test is the absence, because that is the
+    property that decays: someone adding an UPDATE back to the sampler would
+    otherwise reintroduce the second writer with every test still green.
+    """
+    path = os.path.join(gp.repo_root(), "db", "seed", "04_samples.sql")
+    if not os.path.exists(path):
+        pytest.skip("db/seed/04_samples.sql has not been generated")
+
+    with io.open(path, encoding="utf-8") as handle:
+        sql = handle.read()
+
+    for column in ("slope_deg", "landslide_flag"):
+        assert "UPDATE collateral SET %s" % column not in sql, (
+            "04_samples.sql writes %s again. 03_portfolio.sql is its only writer "
+            "(#46); two writers for one column is what ADR-2 exists to prevent." % column
+        )
+
+
+def test_04_samples_still_writes_the_sampled_elevation(emitted_collateral):
+    """`elevation_m` is the one collateral column 04 legitimately still writes.
+
+    Under `--source=live` it is SAMPLED from a DEM, while this emitter carries
+    the generated value from the portfolio CSV, and the measured figure has to
+    win. Under the synthetic floor the two are the same number, so the UPDATE is
+    a no-op there and the live path is the one it exists for. This asserts both
+    halves: that 04 still writes it, and that on this floor it agrees.
+    """
+    path = os.path.join(gp.repo_root(), "db", "seed", "04_samples.sql")
+    if not os.path.exists(path):
+        pytest.skip("db/seed/04_samples.sql has not been generated")
+
+    pattern = re.compile(
+        r"UPDATE collateral SET elevation_m = ([0-9.]+) WHERE id = '([^']+)';")
+
+    compared = 0
+    with io.open(path, encoding="utf-8") as handle:
+        for line in handle:
+            match = pattern.match(line.strip())
+            if not match:
+                continue
+            _elevation, cid = match.groups()
+            assert cid in emitted_collateral, cid
+            compared += 1
+
+    assert compared >= 150, "only %d rows compared; the pattern has drifted" % compared
+
+
+def test_thumb_path_is_null_without_a_manifest(emitted_collateral):
+    """The thumbnail step is optional: a clone that never ran it still seeds."""
+    manifest = os.path.join(
+        gp.repo_root(), "data", "frozen", "satellite_thumbs.csv")
+    if os.path.isfile(manifest):
+        pytest.skip("a thumbs manifest exists; the populated case is covered below")
+    assert all(v["thumb"] == "NULL" for v in emitted_collateral.values())
+
+
+def test_thumb_path_matches_the_manifest_when_one_exists(emitted_collateral):
+    """The manifest is the single source of truth for this column."""
+    manifest = os.path.join(
+        gp.repo_root(), "data", "frozen", "satellite_thumbs.csv")
+    if not os.path.isfile(manifest):
+        pytest.skip("data/frozen/satellite_thumbs.csv is not committed yet")
+
+    with io.open(manifest, encoding="utf-8", newline="") as handle:
+        expected = dict(
+            (r["collateral_id"], r["cached_path"])
+            for r in csv.DictReader(handle)
+            if r.get("collateral_id") and r.get("cached_path"))
+
+    assert expected, "the manifest is committed but empty"
+    for cid, cached in expected.items():
+        assert cid in emitted_collateral, cid
+        assert emitted_collateral[cid]["thumb"] == "'%s'" % cached, cid
+
+    # Every path is same-origin and under the committed cache directory, which
+    # is what worker A's offline spec asserts about the rendered <img> tags.
+    for cached in expected.values():
+        assert cached.startswith("/cache/thumbs/"), cached
+
+
+def test_thumb_paths_reads_the_manifest_csv(tmp_path):
+    directory = tmp_path / "data" / "frozen"
+    directory.mkdir(parents=True)
+    (directory / "satellite_thumbs.csv").write_text(
+        os.linesep.join([
+            "collateral_id,cached_path,provider",
+            "SG-MS-001,/cache/thumbs/SG-MS-001-abc123.jpg,NASA GIBS",
+            "SG-MS-002,,NASA GIBS",
+            "",
+        ]),
+        encoding="utf-8")
+
+    found = gp.thumb_paths(str(tmp_path))
+    assert found == {"SG-MS-001": "/cache/thumbs/SG-MS-001-abc123.jpg"}, found
+    # A row with an empty path is skipped rather than emitted as an empty string.
+    assert "SG-MS-002" not in found
+    assert gp.thumb_paths(str(tmp_path / "nowhere")) == {}

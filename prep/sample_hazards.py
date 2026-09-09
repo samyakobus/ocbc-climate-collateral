@@ -674,13 +674,27 @@ END $$;
 """)
 
     if collateral_rows:
-        add(f"-- {len(collateral_rows)} sampled collateral columns (slope, elevation, landslide flag)")
+        # ONE WRITER PER COLUMN (#46).
+        #
+        # `slope_deg` and `landslide_flag` used to be written here as well as by
+        # `03_portfolio.sql`, back when the TypeScript stopgap emitted that file
+        # and could not derive them. `prep/gen_portfolio.py` now writes both,
+        # from the same `prep/lib/context.py` functions this module calls, so a
+        # second UPDATE here would be two writers agreeing by luck rather than by
+        # construction. They are gone; the column check in
+        # `tests/prep/test_clean_machine.py` is what keeps them in 03.
+        #
+        # `elevation_m` STAYS, and the difference is not arbitrary. Under
+        # `--source=live` elevation is SAMPLED from a DEM, while 03 carries the
+        # generated value from the portfolio CSV; the measured figure has to win.
+        # Under the synthetic floor the two are the same number, so the UPDATE is
+        # a no-op there and the live path is the one it exists for.
+        add(f"-- {len(collateral_rows)} sampled elevations. Slope and the landslide flag are")
+        add("-- written by 03_portfolio.sql, which is their only writer (#46).")
         for row in collateral_rows:
             add(
                 "UPDATE collateral SET "
-                f"slope_deg = {_sql(row.get('slope_deg'))}, "
-                f"elevation_m = {_sql(row.get('elevation_m'))}, "
-                f"landslide_flag = {_sql(row.get('landslide_flag'))} "
+                f"elevation_m = {_sql(row.get('elevation_m'))} "
                 f"WHERE id = {_sql(row.get('collateral_id'))};"
             )
         add("")

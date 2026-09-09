@@ -18,22 +18,23 @@
 
 import { Pool, type PoolClient, type QueryResultRow } from 'pg';
 
+import { readEnvNumber, requireEnv } from '@/lib/config/env';
+
 const KEY = Symbol.for('ocbc.db.pool');
 
 type Holder = { [KEY]?: Pool };
 
 /** Max connections. The PGlite socket server allows 25; leave room for tests and scripts. */
-const MAX_CONNECTIONS = Number(process.env.DATABASE_POOL_MAX ?? 8);
+const DEFAULT_POOL_MAX = 8;
 
 export function pool(): Pool {
   const holder = globalThis as unknown as Holder;
 
   if (!holder[KEY]) {
-    const connectionString = process.env.DATABASE_URL;
-    if (!connectionString) {
-      throw new Error('DATABASE_URL is not set; copy .env.example to .env');
-    }
-    holder[KEY] = new Pool({ connectionString, max: MAX_CONNECTIONS });
+    holder[KEY] = new Pool({
+      connectionString: requireEnv('DATABASE_URL'),
+      max: readEnvNumber('DATABASE_POOL_MAX', DEFAULT_POOL_MAX),
+    });
   }
 
   return holder[KEY];

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { IllustrativeRibbon } from '@/components/IllustrativeRibbon';
 import { logoutAction } from '@/lib/auth/actions';
 import { requireUser, segmentFor, type UserRole } from '@/lib/auth/session';
 
@@ -49,33 +50,40 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex min-h-full flex-1 flex-col">
-      {/*
-        Illustrative-data ribbon (plan 4.9, a spec non-goal made explicit). Every
-        S$ figure in the app is derived from a synthetic portfolio, and this says
-        so on every screen. worker-c lifts this into components/IllustrativeRibbon
-        during the S27 visual pass.
-      */}
-      <div className="bg-amber-100 px-4 py-1 text-center text-xs text-amber-900 dark:bg-amber-950 dark:text-amber-200">
-        Synthetic portfolio, illustrative figures. Not a credit decision.
-      </div>
+      {/* Lifted into its own component during the S27 visual pass, and now on
+          the sign-in screen too, so no screenshot of any screen loses it. */}
+      <IllustrativeRibbon />
 
-      <header className="flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-black/10 px-4 py-2.5 dark:border-white/15">
-        <span className="text-sm font-semibold">OCBC Climate Collateral</span>
+      {/*
+        The chrome does not print. A credit file taken into a room is the case
+        screen and nothing else: navigation, the role line and the sign-out
+        control are all things a reader cannot act on from paper.
+      */}
+      <header className="print-hide flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-rule bg-surface px-4 py-2.5">
+        <span className="flex items-center gap-2 text-sm font-semibold">
+          {/* The accent as identity, not as a risk signal. */}
+          <span aria-hidden className="inline-block h-3.5 w-1 rounded-sm bg-accent" />
+          OCBC Climate Collateral
+        </span>
 
         <nav className="flex flex-1 flex-wrap items-center gap-4 text-sm">
           {items.map((item) => (
-            <Link key={item.href} href={hrefFor(item, user.role)} className="hover:underline">
+            <Link
+              key={item.href}
+              href={hrefFor(item, user.role)}
+              className="text-muted transition-colors hover:text-accent hover:underline"
+            >
               {item.label}
             </Link>
           ))}
         </nav>
 
-        <div className="flex items-center gap-3 text-xs">
-          <span className="opacity-70">
+        <div className="flex items-center gap-3 text-xs text-muted">
+          <span>
             {user.display_name} - {user.role.replace(/_/g, ' ')}
           </span>
           <form action={logoutAction}>
-            <button type="submit" className="hover:underline">
+            <button type="submit" className="hover:text-accent hover:underline">
               Sign out
             </button>
           </form>

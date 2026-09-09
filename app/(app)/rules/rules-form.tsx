@@ -160,7 +160,7 @@ export function RulesForm({ active }: { active: ActiveRuleSet }) {
               disabled
               aria-label="Return period (years)"
               data-testid="return-period"
-              className="rounded border border-black/10 bg-black/5 px-2 py-1 text-sm opacity-70 dark:border-white/10 dark:bg-white/5"
+              className="rounded border border-rule bg-black/5 px-2 py-1 text-sm opacity-70 dark:border-white/10 dark:bg-white/5"
             />
             <span className="text-[11px] opacity-60">
               Descriptive label only. Read-only: it does not drive P.

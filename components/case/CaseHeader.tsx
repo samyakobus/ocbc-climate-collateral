@@ -49,7 +49,7 @@ export function CaseHeader({ collateral, loan, valuation, scenario }: CaseHeader
           </p>
         </div>
 
-        <nav aria-label="Scenario" className="flex items-center gap-1 text-xs">
+        <nav aria-label="Scenario" className="print-hide flex items-center gap-1 text-xs">
           {SCENARIOS.map((option) => {
             const selected = option.key === scenario;
             return (
@@ -59,10 +59,10 @@ export function CaseHeader({ collateral, loan, valuation, scenario }: CaseHeader
                 data-testid={`case-scenario-${option.key}`}
                 aria-current={selected ? 'page' : undefined}
                 className={
-                  'rounded border px-2 py-1 ' +
+                  'rounded border px-2 py-1 transition-colors ' +
                   (selected
-                    ? 'border-black/30 font-semibold dark:border-white/40'
-                    : 'border-transparent opacity-60 hover:opacity-100')
+                    ? 'border-accent font-semibold text-accent'
+                    : 'border-transparent text-muted hover:text-accent')
                 }
               >
                 {option.label}
@@ -72,7 +72,7 @@ export function CaseHeader({ collateral, loan, valuation, scenario }: CaseHeader
         </nav>
       </div>
 
-      <dl className="grid grid-cols-2 gap-x-4 gap-y-2 rounded-lg border border-black/10 px-4 py-3 text-sm sm:grid-cols-5 dark:border-white/15">
+      <dl className="panel avoid-break grid grid-cols-2 gap-x-4 gap-y-2 px-4 py-3 text-sm sm:grid-cols-5">
         <Figure label="Applicant" value={loan.applicant_name} sub={humanise(loan.applicant_kind)} />
         <Figure
           label="Segment"

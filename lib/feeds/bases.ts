@@ -14,30 +14,42 @@
  * misconfigured deployment fails loudly at the request rather than silently
  * serving stale data.
  *
- * Read lazily rather than captured at module load, so a test can set them before
- * the first request without depending on import order.
+ * The values come from `lib/config/env.ts`, which reads by variable key at call
+ * time. That is not a style choice: Turbopack folds a literal
+ * `process.env.SOMETHING` to its BUILD-time value, so a direct read here baked in
+ * `undefined` and the default won for ever, and the offline specs passed while
+ * silently reaching the real feed. See that module's header.
  */
+
+import { readEnv } from '@/lib/config/env';
 
 /** NASA EONET, the environmental event feed. `app/api/refresh/news`. */
 export function eonetBase(): string {
-  return trimSlash(process.env.FEED_EONET_BASE ?? 'https://eonet.gsfc.nasa.gov');
+  return trimSlash(readEnv('FEED_EONET_BASE') ?? 'https://eonet.gsfc.nasa.gov');
 }
 
 /** NASA GIBS, the satellite tile service. `app/api/refresh/tiles`. */
 export function gibsBase(): string {
-  return trimSlash(process.env.FEED_GIBS_BASE ?? 'https://gibs.earthdata.nasa.gov');
+  return trimSlash(readEnv('FEED_GIBS_BASE') ?? 'https://gibs.earthdata.nasa.gov');
 }
 
 /**
- * The per-property satellite thumbnail: the one live call on a render path that
- * the spec asks for, with a cached fallback.
+ * Google Maps Static, the per-property satellite thumbnail (S43).
+ * `app/api/refresh/thumbs`.
  *
- * Nothing reads this yet. It is declared here so that whoever builds the
- * thumbnail takes its host from the same place as the other two, rather than
- * hard-coding one and leaving the offline rehearsal with a hole in it.
+ * Read only when the stored `collateral.satellite_thumb_url` names Maps Static.
+ * Without `GOOGLE_MAPS_STATIC_KEY` the prep pipeline writes NASA GIBS URLs
+ * instead, and those refresh through `gibsBase()`; the route picks by the stored
+ * URL rather than by a flag, so a row keeps refreshing from the service it came
+ * from.
+ *
+ * Note that the thumbnail is NOT a live call on a render path. The case screen
+ * renders `satellite_thumb_path`, a committed file, and this host is reached
+ * only behind the refresh button. That is what lets the thumbnail survive a
+ * disabled interface with no degraded view to rehearse.
  */
 export function thumbBase(): string {
-  return trimSlash(process.env.THUMB_BASE ?? 'https://maps.googleapis.com');
+  return trimSlash(readEnv('THUMB_BASE') ?? 'https://maps.googleapis.com');
 }
 
 function trimSlash(value: string): string {
@@ -68,6 +80,6 @@ export function rewriteToBase(url: string, base: string): string {
 /** True when any host has been pointed away from its real default. */
 export function anyBaseOverridden(): boolean {
   return Boolean(
-    process.env.FEED_EONET_BASE ?? process.env.FEED_GIBS_BASE ?? process.env.THUMB_BASE,
+    readEnv('FEED_EONET_BASE') ?? readEnv('FEED_GIBS_BASE') ?? readEnv('THUMB_BASE'),
   );
 }

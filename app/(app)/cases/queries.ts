@@ -114,6 +114,13 @@ export type CaseCollateral = {
   dist_to_coast_km: number | null;
   landslide_flag: boolean;
   slope_deg: number | null;
+  /**
+   * A same-origin path under `public/cache/thumbs/`, or null where the
+   * thumbnail step has never run. Never an external URL: the case screen
+   * renders it directly, and worker A's offline spec asserts every `<img>` on
+   * the fixture case screens is same-origin.
+   */
+  satellite_thumb_path: string | null;
   adaptation_project_id: string | null;
   damage_class: string | null;
   curve_label: string | null;
@@ -228,6 +235,7 @@ export async function loadCase(
            c.floor_level, c.elevation_m::float8 AS elevation_m,
            c.dist_to_coast_km::float8 AS dist_to_coast_km,
            c.landslide_flag, c.slope_deg::float8 AS slope_deg,
+           c.satellite_thumb_path,
            c.adaptation_project_id,
            bdc.damage_class,
            ddf.curve_label, ddf.source_name AS curve_source_name,
@@ -337,6 +345,7 @@ export async function loadCase(
       dist_to_coast_km: h.dist_to_coast_km === null ? null : Number(h.dist_to_coast_km),
       landslide_flag: Boolean(h.landslide_flag),
       slope_deg: h.slope_deg === null ? null : Number(h.slope_deg),
+      satellite_thumb_path: h.satellite_thumb_path ? String(h.satellite_thumb_path) : null,
       adaptation_project_id: h.adaptation_project_id ? String(h.adaptation_project_id) : null,
       damage_class: h.damage_class ? String(h.damage_class) : null,
       curve_label: h.curve_label ? String(h.curve_label) : null,

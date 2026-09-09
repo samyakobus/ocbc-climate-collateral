@@ -36,9 +36,9 @@ export function NewsList({ events, refreshAction }: NewsListProps) {
   return (
     <section
       data-testid="news-list"
-      className="flex min-h-0 flex-col rounded-lg border border-black/10 dark:border-white/15"
+      className="flex min-h-0 flex-col panel"
     >
-      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-black/10 px-4 py-2.5 dark:border-white/15">
+      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-rule px-4 py-2.5 dark:border-rule">
         <h2 className="text-sm font-semibold">
           Recent events{' '}
           <span data-testid="news-count" className="font-normal opacity-60">
@@ -99,7 +99,7 @@ export function NewsList({ events, refreshAction }: NewsListProps) {
       {hasEarthquake ? (
         <p
           data-testid="earthquake-note"
-          className="border-t border-black/10 px-4 py-2 text-xs opacity-70 dark:border-white/15"
+          className="border-t border-rule px-4 py-2 text-xs opacity-70 dark:border-rule"
         >
           Earthquakes are shown as environmental context and are never scored. The
           hazard set has no earthquake member, so no haircut can include one.

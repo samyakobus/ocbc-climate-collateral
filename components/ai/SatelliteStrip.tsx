@@ -26,9 +26,9 @@ export function SatelliteStrip({ tiles, refreshAction }: SatelliteStripProps) {
   return (
     <section
       data-testid="satellite-strip"
-      className="rounded-lg border border-black/10 dark:border-white/15"
+      className="panel"
     >
-      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-black/10 px-4 py-2.5 dark:border-white/15">
+      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-rule px-4 py-2.5 dark:border-rule">
         <h2 className="text-sm font-semibold">
           Satellite imagery{' '}
           <span className="font-normal opacity-60">({tiles.length} regions)</span>
@@ -56,7 +56,7 @@ export function SatelliteStrip({ tiles, refreshAction }: SatelliteStripProps) {
                 alt={`${tile.provider} imagery over ${tile.region}`}
                 width={160}
                 height={160}
-                className="h-40 w-40 rounded border border-black/10 object-cover dark:border-white/15"
+                className="h-40 w-40 rounded border border-rule object-cover dark:border-rule"
               />
               <div className="mt-1 text-xs font-medium">{tile.region}</div>
               <div className="text-[11px] opacity-60">
@@ -67,7 +67,7 @@ export function SatelliteStrip({ tiles, refreshAction }: SatelliteStripProps) {
         </ul>
       )}
 
-      <p className="border-t border-black/10 px-4 py-2 text-[11px] opacity-60 dark:border-white/15">
+      <p className="border-t border-rule px-4 py-2 text-[11px] opacity-60 dark:border-rule">
         Rendered from the committed cache, so the strip survives a dead network.
         Refresh replaces the file and updates the row; a failure changes nothing.
       </p>

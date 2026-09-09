@@ -25,7 +25,7 @@ export function ConditionList({ recommendation, todayYear = 2025 }: ConditionLis
     return (
       <section
         data-testid="condition-list"
-        className="rounded-lg border border-black/10 px-4 py-3 text-sm dark:border-white/15"
+        className="panel avoid-break px-4 py-3 text-sm"
       >
         <h2 className="text-sm font-semibold">Conditions</h2>
         <p className="mt-1 text-xs opacity-70">
@@ -42,9 +42,9 @@ export function ConditionList({ recommendation, todayYear = 2025 }: ConditionLis
   return (
     <section
       data-testid="condition-list"
-      className="rounded-lg border border-black/10 dark:border-white/15"
+      className="panel avoid-break"
     >
-      <header className="flex flex-wrap items-center gap-2 border-b border-black/10 px-4 py-2.5 dark:border-white/15">
+      <header className="flex flex-wrap items-center gap-2 border-b border-rule px-4 py-2.5 dark:border-rule">
         <h2 className="text-sm font-semibold">Conditions</h2>
         <span className={`rounded px-2 py-0.5 text-xs ${BAND_CHIP[recommendation.band]}`}>
           {recommendation.band}

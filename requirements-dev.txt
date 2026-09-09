@@ -1,3 +1,8 @@
 -r requirements.txt
 
 pytest==8.3.4
+
+# Pillow: prep/fetch_thumbs.py --source=live decodes each candidate tile to check it
+# is not blank (S43). A committed cache and the frozen replay need nothing beyond the
+# standard library, so a clean clone still seeds without it (AC-13).
+Pillow>=10.0

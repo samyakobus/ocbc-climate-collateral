@@ -20,6 +20,7 @@ import { getIronSession, type IronSession, type SessionOptions } from 'iron-sess
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
+import { readEnv } from '@/lib/config/env';
 import { query } from '@/lib/db/client';
 
 /** The three roles of the `user_role` enum. */
@@ -69,7 +70,12 @@ export function segmentFor(role: UserRole): 'personal' | 'corporate' | null {
 }
 
 function sessionSecret(): string {
-  const secret = process.env.AUTH_SECRET;
+  // Through lib/config/env.ts rather than a literal `process.env.AUTH_SECRET`.
+  // Turbopack folds a literal read to its BUILD-time value in the production
+  // bundle, so a deployment that supplies the secret only at run time would get
+  // the build's value, or none. The length check stays here: it is a rule about
+  // this secret, not about reading configuration.
+  const secret = readEnv('AUTH_SECRET');
   if (!secret || secret.length < 32) {
     throw new Error(
       'AUTH_SECRET must be set to at least 32 characters. Copy .env.example to .env.',

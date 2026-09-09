@@ -29,13 +29,29 @@ export async function login(page: Page, email = RISK_MANAGER, password = PASSWOR
  * Open /map and wait until the style has parsed and the pin layer carries
  * features.
  *
- * The map exposes itself on `window.__portfolioMap` outside production
- * precisely so a spec can ask the rendered style what colour a pin is, rather
- * than sampling canvas pixels and hoping.
+ * TWO WAITS, IN THIS ORDER, AND THE ORDER IS THE POINT.
+ *
+ * First `data-map-ready`, a plain DOM attribute the component sets once the pin
+ * layer is on the map. A DOM signal survives anything the bundler does, which
+ * the window handle demonstrably did not: it used to be assigned behind
+ * `process.env.NODE_ENV !== 'production'`, Next inlined that to `false`, the
+ * assignment was eliminated from the build, and every map spec then reported
+ * "the pin layer never rendered any features" for pins that were on screen the
+ * whole time. The end-to-end run serves the build, so that was every run.
+ *
+ * Then the handle, because these specs genuinely need it: reading a pin's
+ * colour out of the rendered paint expression is the only alternative to
+ * sampling canvas pixels and hoping. It is now assigned unconditionally. The
+ * DOM wait first means a future regression in the handle fails with a message
+ * about the handle rather than one that blames the map.
  */
 export async function openMap(page: Page) {
   await page.goto('/map');
+  await assertAssetsLoaded(page, '/map');
   await page.locator('canvas.maplibregl-canvas').waitFor();
+  await expect(page.getByTestId('portfolio-map')).toHaveAttribute('data-map-ready', 'true', {
+    timeout: 90_000,
+  });
 
   await expect
     .poll(
@@ -45,8 +61,44 @@ export async function openMap(page: Page) {
           if (!map || !map.isStyleLoaded()) return 0;
           return map.queryRenderedFeatures({ layers: ['collateral-pins'] }).length;
         }),
-      { timeout: 30_000, message: 'the pin layer never rendered any features' },
+      /* Generous, because this may be the first hit on /map against a cold dev
+         server: Turbopack compiles the MapLibre bundle on demand. */
+      { timeout: 90_000, message: 'the pin layer never rendered any features' },
     )
+    .toBeGreaterThan(0);
+}
+
+/**
+ * Fail fast, and by name, when the page arrives without its static assets.
+ *
+ * This exists because of a real intermittent failure that was costing ninety
+ * seconds and naming the wrong thing. Roughly one full run in three, a
+ * navigation to `/map` came back with the server-rendered HTML but with NEITHER
+ * the stylesheet NOR the client bundle: the screenshot showed unstyled markup,
+ * the accessibility snapshot carried no `<canvas>` at all because the client
+ * component never mounted, and the map container had no height because nothing
+ * had styled it. The only symptom the specs reported was "waiting for
+ * locator('canvas.maplibregl-canvas') to be visible", which reads as a broken
+ * map and sends the next person to look at MapLibre.
+ *
+ * A missing stylesheet is checked rather than a missing script because it is
+ * the cheaper and more reliable signal: `document.styleSheets` is populated
+ * synchronously as the sheet parses, and the app ships exactly one. The timeout
+ * is short on purpose. If the assets are coming at all they are already here;
+ * waiting longer only delays a failure whose cause is not the application.
+ *
+ * This diagnoses, it does not fix. The underlying flake is in serving
+ * `/_next/static/**` and is recorded in plan section 10.
+ */
+async function assertAssetsLoaded(page: Page, route: string): Promise<void> {
+  await expect
+    .poll(async () => page.evaluate(() => document.styleSheets.length), {
+      timeout: 15_000,
+      message:
+        `${route} rendered without its stylesheet, so the client bundle did not load ` +
+        'either and no component mounted. This is the static-asset flake, not a map ' +
+        'fault: re-run the spec. See plan section 10.',
+    })
     .toBeGreaterThan(0);
 }
 

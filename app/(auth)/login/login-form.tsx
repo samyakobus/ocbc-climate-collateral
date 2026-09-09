@@ -16,30 +16,30 @@ export function LoginForm() {
   return (
     <form action={formAction} className="flex flex-col gap-4" noValidate>
       <label className="flex flex-col gap-1.5">
-        <span className="text-xs font-medium uppercase tracking-wide opacity-70">Email</span>
+        <span className="text-xs font-medium uppercase tracking-wide text-muted">Email</span>
         <input
           name="email"
           type="email"
           autoComplete="username"
           required
           autoFocus
-          className="rounded border border-black/15 bg-white px-3 py-2 text-sm dark:border-white/20 dark:bg-black/20"
+          className="rounded border border-rule-strong bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
         />
       </label>
 
       <label className="flex flex-col gap-1.5">
-        <span className="text-xs font-medium uppercase tracking-wide opacity-70">Password</span>
+        <span className="text-xs font-medium uppercase tracking-wide text-muted">Password</span>
         <input
           name="password"
           type="password"
           autoComplete="current-password"
           required
-          className="rounded border border-black/15 bg-white px-3 py-2 text-sm dark:border-white/20 dark:bg-black/20"
+          className="rounded border border-rule-strong bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
         />
       </label>
 
       {state.error ? (
-        <p role="alert" data-testid="login-error" className="text-sm text-red-700 dark:text-red-400">
+        <p role="alert" data-testid="login-error" className="text-sm font-medium text-accent">
           {state.error}
         </p>
       ) : null}
@@ -47,7 +47,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={pending}
-        className="rounded bg-red-700 px-3 py-2 text-sm font-medium text-white disabled:opacity-60"
+        className="rounded bg-accent px-3 py-2 text-sm font-medium text-accent-contrast transition-colors hover:bg-accent-strong disabled:opacity-60"
       >
         {pending ? 'Signing in...' : 'Sign in'}
       </button>
