@@ -94,10 +94,16 @@ export const SYSTEM_PROMPT = [
  * `assign_hotspot_score`, forced with `tool_choice`.
  *
  * `strict: true` asks the API to keep the arguments schema-valid; the bounds
- * are still enforced in `validate-score.ts`, because the schema is advisory and
+ * are enforced in `validate-score.ts`, because the schema is advisory and
  * a response with no tool block at all is a distinct path from malformed input.
- * Every bound here is imported from the validator rather than retyped, so the
- * schema and the enforcement cannot drift apart.
+ *
+ * The numeric range keywords (`minimum`, `maximum`, `minItems`, `maxItems`,
+ * `minLength`, `maxLength`) are deliberately ABSENT from this schema: the API
+ * rejects them under `strict: true` (observed 2026-09-09: 400
+ * "tools.0.custom: For 'integer' type, properties maximum, minimum are not
+ * supported", which turned every scoring call into a transport fallback). The
+ * bounds are stated in the descriptions instead, still read from the validator's
+ * constants so the wording and the enforcement cannot drift apart.
  */
 export const ASSIGN_HOTSPOT_SCORE_TOOL = {
   name: TOOL_NAME,
@@ -109,20 +115,20 @@ export const ASSIGN_HOTSPOT_SCORE_TOOL = {
     properties: {
       score: {
         type: 'integer',
-        minimum: SCORE_BOUNDS.min,
-        maximum: SCORE_BOUNDS.max,
-        description: 'The hotspot score, 1 to 100, on the calibration scale in the system prompt.',
+        description: `The hotspot score, an integer from ${SCORE_BOUNDS.min} to ${SCORE_BOUNDS.max}, on the calibration scale in the system prompt.`,
       },
       drivers: {
         type: 'array',
-        minItems: DRIVER_BOUNDS.min,
-        maxItems: DRIVER_BOUNDS.max,
+        description: `Between ${DRIVER_BOUNDS.min} and ${DRIVER_BOUNDS.max} drivers, each naming one input field.`,
         items: {
           type: 'object',
           properties: {
             input_field: { type: 'string', enum: [...INPUT_FIELD_VALUES] },
             direction: { type: 'string', enum: [...DRIVER_DIRECTIONS] },
-            note: { type: 'string', maxLength: DRIVER_BOUNDS.noteMaxLength },
+            note: {
+              type: 'string',
+              description: `One short clause, at most ${DRIVER_BOUNDS.noteMaxLength} characters.`,
+            },
           },
           required: ['input_field', 'direction', 'note'],
           additionalProperties: false,
@@ -130,10 +136,7 @@ export const ASSIGN_HOTSPOT_SCORE_TOOL = {
       },
       rationale: {
         type: 'string',
-        minLength: RATIONALE_BOUNDS.min,
-        maxLength: RATIONALE_BOUNDS.max,
-        description:
-          'Two or three sentences. Every number must be one of the input values, plainly, as a percentage, or with a currency.',
+        description: `Two or three sentences, ${RATIONALE_BOUNDS.min} to ${RATIONALE_BOUNDS.max} characters. Every number must be one of the input values, plainly, as a percentage, or with a currency.`,
       },
     },
     required: ['score', 'drivers', 'rationale'],

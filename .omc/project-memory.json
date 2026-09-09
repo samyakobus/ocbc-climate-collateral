@@ -276,6 +276,12 @@
       "type": "file"
     },
     {
+      "path": "lib/index/validate-score.ts",
+      "accessCount": 10,
+      "lastAccessed": 1788926354730,
+      "type": "file"
+    },
+    {
       "path": "tests/e2e/offline.spec.ts",
       "accessCount": 9,
       "lastAccessed": 1788891063881,
@@ -291,12 +297,6 @@
       "path": "scripts/e2e-server.ts",
       "accessCount": 6,
       "lastAccessed": 1788890267169,
-      "type": "file"
-    },
-    {
-      "path": "lib/index/validate-score.ts",
-      "accessCount": 5,
-      "lastAccessed": 1788889467379,
       "type": "file"
     },
     {
@@ -333,6 +333,12 @@
       "path": "scripts/gen-hotspot-scores.ts",
       "accessCount": 3,
       "lastAccessed": 1788890248810,
+      "type": "file"
+    },
+    {
+      "path": "lib/index/llm-score.ts",
+      "accessCount": 3,
+      "lastAccessed": 1788925958567,
       "type": "file"
     },
     {
@@ -381,6 +387,12 @@
       "path": "package.json",
       "accessCount": 2,
       "lastAccessed": 1788890919393,
+      "type": "file"
+    },
+    {
+      "path": "tests/unit/score-validate.test.ts",
+      "accessCount": 2,
+      "lastAccessed": 1788926396585,
       "type": "file"
     },
     {
@@ -438,12 +450,6 @@
       "type": "file"
     },
     {
-      "path": "lib/index/llm-score.ts",
-      "accessCount": 1,
-      "lastAccessed": 1788886923021,
-      "type": "file"
-    },
-    {
       "path": "lib/index/store.ts",
       "accessCount": 1,
       "lastAccessed": 1788886968764,
@@ -471,12 +477,6 @@
       "path": "test-results/s27/03-portfolio.png",
       "accessCount": 1,
       "lastAccessed": 1788887118519,
-      "type": "file"
-    },
-    {
-      "path": "tests/unit/score-validate.test.ts",
-      "accessCount": 1,
-      "lastAccessed": 1788887153794,
       "type": "file"
     },
     {

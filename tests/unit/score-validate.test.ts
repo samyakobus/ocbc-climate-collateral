@@ -29,6 +29,7 @@ import {
 import {
   firstUncitedNumber,
   numericTokens,
+  tokenCites,
   validateScore,
   type ScoreRejection,
 } from '@/lib/index/validate-score';
@@ -325,5 +326,40 @@ describe('the fallback paths', () => {
     expect(outcome.ok).toBe(true);
     expect(outcome.ok && outcome.value.score).toBe(62);
     expect(create).toHaveBeenCalledWith(expect.anything(), { timeout: SCORING_TIMEOUT_MS });
+  });
+});
+
+/*
+  Added 2026-09-09 after the first live scoring run against the real API.
+  Two defects surfaced only with a key present: the API rejects numeric range
+  keywords under strict tool schemas, and the citation rule rejected money
+  abbreviated the way every analyst writes it.
+*/
+describe('live-run regressions (2026-09-09)', () => {
+  it('the strict tool schema carries no numeric range keywords the API rejects', () => {
+    // 400 "tools.0.custom: For 'integer' type, properties maximum, minimum are not supported"
+    const serialised = JSON.stringify(ASSIGN_HOTSPOT_SCORE_TOOL.input_schema);
+    for (const keyword of ['"minimum"', '"maximum"', '"minItems"', '"maxItems"', '"minLength"', '"maxLength"']) {
+      expect(serialised).not.toContain(keyword);
+    }
+  });
+
+  it('accepts money abbreviated at the model\'s own magnitude and precision', () => {
+    const [million] = numericTokens('exposure of SGD 17.87 million');
+    expect(tokenCites(million, 17_866_000)).toBe(true);
+
+    const [short] = numericTokens('S$196.2m of the book');
+    expect(tokenCites(short, 196_223_000)).toBe(true);
+
+    const [onePlace] = numericTokens('about S$17.9 million');
+    expect(tokenCites(onePlace, 17_866_000)).toBe(true);
+  });
+
+  it('still rejects an abbreviated figure that is not the value at that precision', () => {
+    const [wrong] = numericTokens('SGD 18.2 million');
+    expect(tokenCites(wrong, 17_866_000)).toBe(false);
+
+    const [wrongShort] = numericTokens('S$197.0m');
+    expect(tokenCites(wrongShort, 196_223_000)).toBe(false);
   });
 });

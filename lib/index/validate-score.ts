@@ -75,6 +75,10 @@ export type NumericToken = {
   raw: string;
   value: number;
   isPercent: boolean;
+  /** The suffix multiplier the model used (1 when none): `17.87 million` -> 1e6. */
+  magnitude: number;
+  /** Decimal places written on the number itself: `17.87` -> 2, `196` -> 0. */
+  decimals: number;
   /** Up to 24 characters before the token, for the bare-integer exemptions. */
   before: string;
   /** Up to 16 characters after it. */
@@ -131,6 +135,8 @@ export function numericTokens(text: string): NumericToken[] {
       raw: match[0].trim(),
       value: base * magnitude,
       isPercent,
+      magnitude,
+      decimals: digits.includes('.') ? digits.length - digits.indexOf('.') - 1 : 0,
       before: normalised.slice(Math.max(0, start - 24), start),
       after: normalised.slice(start + match[0].length, start + match[0].length + 16),
     });
@@ -183,6 +189,21 @@ export function tokenCites(token: NumericToken, value: number): boolean {
   */
   for (const places of [0, 1, 2, 3]) {
     if (nearlyEqual(token.value, Number(target.toFixed(places)))) return true;
+  }
+
+  /*
+    A rendering at the model's OWN magnitude and precision. "SGD 17.87 million"
+    is 17,866,000 shown in millions to two places, and "S$196.2m" is
+    196,223,000 in millions to one place. Neither is 1, 2 or 3 significant
+    figures of the value, and neither is a fixed-decimal rendering of the full
+    figure, so both were rejected on the first live run (2026-09-09) and two
+    hotspots fell back for abbreviating a number the way every analyst does.
+    The check is exact for the digits the model wrote: the value scaled to the
+    suffix and rounded to the written decimals must read back as the token.
+  */
+  if (token.magnitude > 1) {
+    const scaled = Number((target / token.magnitude).toFixed(token.decimals));
+    if (nearlyEqual(token.value, scaled * token.magnitude)) return true;
   }
 
   return false;
