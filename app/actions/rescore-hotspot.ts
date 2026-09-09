@@ -59,16 +59,27 @@ export async function rescoreHotspotAction(hotspotId: string): Promise<RescoreSt
       };
     }
 
+    /* What is on the row now, so a failed attempt can report that it kept it. */
+    const { rows: storedRows } = await db.query<{ llm_score: number | null }>(
+      'SELECT llm_score FROM hotspots WHERE id = $1',
+      [hotspot.id],
+    );
+    const storedScore: number | null = storedRows[0]?.llm_score ?? null;
+
+    /*
+      A LIVE attempt that fails never replaces what is stored. The prep script
+      may overwrite (a prep run is a deliberate act); a button press on stage is
+      not allowed to turn a good model score into a fallback because the network
+      blinked. Same rule as the tile and thumbnail refreshes: never replace a
+      good image with a blank. (Found in the 2026-09-09 rehearsal review.)
+    */
     if (!apiKey) {
-      await applyScoreOutcome(db, hotspot.id, {
-        ok: false,
-        reason: 'transport',
-        detail: 'ANTHROPIC_API_KEY is not set',
-      });
       return {
         ok: false,
-        message: 'No API key on this host. Showing the reference index with a fallback badge.',
-        score: null,
+        message: storedScore === null
+          ? 'No API key on this host. Showing the reference index with a fallback badge.'
+          : 'No API key on this host. Keeping the stored score.',
+        score: storedScore,
       };
     }
 
@@ -79,7 +90,7 @@ export async function rescoreHotspotAction(hotspotId: string): Promise<RescoreSt
     }) as unknown as ScoringClient;
 
     const outcome = await scoreHotspot(client, hotspot, hotspot.inputs);
-    await applyScoreOutcome(db, hotspot.id, outcome);
+    if (outcome.ok) await applyScoreOutcome(db, hotspot.id, outcome);
 
     if (outcome.ok) {
       return {
@@ -97,8 +108,10 @@ export async function rescoreHotspotAction(hotspotId: string): Promise<RescoreSt
 
     return {
       ok: false,
-      message: `${said} Showing the reference index with a fallback badge.`,
-      score: null,
+      message: storedScore === null
+        ? `${said} Showing the reference index with a fallback badge.`
+        : `${said} Keeping the stored score.`,
+      score: storedScore,
     };
   });
 

@@ -35,8 +35,9 @@ differently, and the difference is deliberate.
 `offline.spec.ts` lives in its own Playwright project, `offline`, which
 `playwright.config.ts` puts in the projects array ONLY when all three hosts are overridden.
 Without them the file is not collected at all: never listed, never counted, never a skip that
-someone reads as coverage. `refresh.spec.ts` keeps an in-file `test.skip` on its AC-11 block, so a
-default run reports 4 skipped, every time.
+someone reads as coverage. `refresh.spec.ts`'s former AC-11 block was moved into the offline project
+too (2026-09-09), so a default run reports **0 skipped**; a non-zero skipped count in either project
+is a failure, not a quirk.
 
 Simplest way to run everything, including both Playwright projects, is one command:
 
@@ -326,9 +327,11 @@ If the figures look wrong, you skipped step 1.
 |  | a hotspot popup shows name, summary, S$ exposure and share |  |
 |  | the popup shows score, drivers, rationale, the stored input list and the reference index |  |
 
-The last row is the one to watch: the LLM score and the narrative are worker-b's `prep:scores` and
-`prep:narratives`, and without an API key they render their fallback. **A fallback badge is the
-correct offline answer, not a failure.** What would be a failure is a blank panel or a spinner.
+The last row is the one to watch. Whether it shows a model score or the reference index depends on
+whether `prep:scores` was run with an API key BEFORE going offline: with a key (the demo laptop as
+of 2026-09-09: 16 of 16 model-scored, 21 of 21 narratives model-written) the stored model output
+renders offline exactly as it was stored; without one, **a fallback badge is the correct offline
+answer, not a failure.** What would be a failure is a blank panel or a spinner.
 
 ### 11. Refresh buttons (AC-14, AC-16)
 
@@ -346,14 +349,14 @@ how you can see from the outside that nothing was written.
 
 | Pass / fail | Expected | Seen |
 |---|---|---|
-|  | pressing regenerate on one case renders the rule text in place of the narrative |  |
+|  | pressing regenerate on one case reports "The stored narrative is unchanged." and the narrative on screen is the SAME text as before the press (a failed live attempt never overwrites stored model output; only `prep:narratives` may) |  |
 
 ### 13. Hotspot rescore (AC-17)
 
 | Pass / fail | Expected | Seen |
 |---|---|---|
-|  | the reference index renders with a fallback badge |  |
-|  | **the stored score is not overwritten** - note it before and after |  |
+|  | pressing rescore reports "... Keeping the stored score." and the score, drivers and rationale on screen are unchanged (if the row was already a fallback, it says so and shows the reference index with the badge) |  |
+|  | **the stored score is not overwritten** - note it before and after; a failed live attempt never clears a model score, only `prep:scores` may |  |
 
 Write the score down before you press the button. "It looks the same" is not an observation.
 

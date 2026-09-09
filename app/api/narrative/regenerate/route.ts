@@ -95,7 +95,10 @@ export async function POST(request: Request): Promise<NextResponse<Result>> {
       if (subjectType === 'portfolio') {
         const facts = await loadPortfolioFacts(db, scenario);
         const outcome = await generatePortfolioNarrative(client, facts);
-        await saveNarrative(db, { type: 'portfolio', id: 'portfolio', scenario }, outcome);
+        /* A failed LIVE attempt never replaces a stored narrative (see the case branch). */
+        if (!outcome.fallback_used) {
+          await saveNarrative(db, { type: 'portfolio', id: 'portfolio', scenario }, outcome);
+        }
         return outcome;
       }
 
@@ -103,7 +106,16 @@ export async function POST(request: Request): Promise<NextResponse<Result>> {
       if (!facts) return null;
 
       const outcome = await generateCaseNarrative(client, facts);
-      await saveNarrative(db, { type: 'case', id: facts.collateral_id, scenario }, outcome);
+      /*
+        A failed LIVE attempt never replaces a stored narrative. The prep script
+        may write rule text (a prep run is deliberate); a button press must not
+        turn a model-written narrative into rule text because the API was
+        unreachable or one answer failed the citation check. The response still
+        carries the rule text so the caller can show it without storing it.
+      */
+      if (!outcome.fallback_used) {
+        await saveNarrative(db, { type: 'case', id: facts.collateral_id, scenario }, outcome);
+      }
       return outcome;
     });
 
@@ -116,8 +128,8 @@ export async function POST(request: Request): Promise<NextResponse<Result>> {
 
     const message = result.fallback_used
       ? apiKey
-        ? 'The model did not produce a narrative that passed the citation check. Showing the rule text.'
-        : 'No API key on this host. Showing the rule text.'
+        ? 'The model did not produce a narrative that passed the citation check. The stored narrative is unchanged.'
+        : 'No API key on this host. The stored narrative is unchanged.'
       : 'Narrative regenerated.';
 
     return NextResponse.json({
